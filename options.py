@@ -67,7 +67,7 @@ def decrypt(key, source, decode=True):
     padding = data[-1]
 
     if data[-padding:] != bytes([padding]) * padding:
-        raise ValueError("Invalid padding...")
+        raise ValueError("Password is incorrect!")
 
     return data[:-padding].decode("utf-8")
 
