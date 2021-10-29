@@ -54,6 +54,14 @@ def add_property(args):
     print("\nProperty was successfully added!")
 
 
+def remove_property(args):
+    name = args[0]
+    password = get_password(args, 1)
+    options.remove_property(name, password)
+
+    print("\nProperty was successfully removed!")
+
+
 def make_store_backup(_):
     options.make_store_backup()
 

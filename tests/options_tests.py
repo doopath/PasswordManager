@@ -4,6 +4,7 @@ import sys
 import datetime
 from core import options
 from core import constants
+from core.exceptions import PropertyDoesNotExistError
 
 
 class OptionsTest(unittest.TestCase):
@@ -77,12 +78,22 @@ class OptionsTest(unittest.TestCase):
         options.set_value(self.prop_name, new_value, self.password)
         value = options.get_value(self.prop_name, self.password)
 
-        print(f"\n'{value}'")
-        print(f"\n'{new_value}'")
-        options.show_store(self.password)
         is_value_right = value == new_value
 
         assert is_value_right, "The set property should have correct value!"
+
+    def test_remove_property(self):
+        options.add_property(self.prop_name, self.prop_value, self.password)
+        options.remove_property(self.prop_name, self.password)
+
+        is_removed = False
+
+        try:
+            options.get_value(self.prop_name, self.password)
+        except PropertyDoesNotExistError:
+            is_removed = True
+
+        assert is_removed, "The 'remove_property' function should remove the property!"
 
 
 def test():

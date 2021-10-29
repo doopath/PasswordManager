@@ -161,6 +161,7 @@ def modify_property(name: str, password: str, f):
 
     save_store(store)
 
+
 def remove_property(name: str, password: str):
     """
     Remove a set property from the store.
@@ -168,7 +169,11 @@ def remove_property(name: str, password: str):
         pass a name of property to remove as a string,
         pass a password as a string.
     """
-    f = lambda s, l: s.remove(s.index(l))
+    def f(s, l):
+        if l not in s:
+            raise PropertyDoesNotExistError(f"The property ({name}) does not exist!")
+        s.pop(s.index(l))
+
     modify_property(name, password, f)
 
 

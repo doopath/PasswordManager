@@ -10,10 +10,23 @@ OPTIONS = {
     "--get-gh-token" : option_aliases.get_gh_token,
     "--set-value" : option_aliases.set_value,
     "--add-property" : option_aliases.add_property,
+    "--remove-property": option_aliases.remove_property,
     "--make-backup" : option_aliases.make_store_backup,
     "--show-store" : option_aliases.show_store,
     "--help" : option_aliases.show_help_list,
     "--init" : option_aliases.initialize_store,
+    "--version" : option_aliases.show_version,
+
+    "-gv" : option_aliases.get_value,
+    "-ggt" : option_aliases.get_gh_token,
+    "-sv" : option_aliases.set_value,
+    "-ap" : option_aliases.add_property,
+    "-rp": option_aliases.remove_property,
+    "-mb" : option_aliases.make_store_backup,
+    "-ss" : option_aliases.show_store,
+    "-h" : option_aliases.show_help_list,
+    "-i" : option_aliases.initialize_store,
+    "-v" : option_aliases.show_version,
 }
 
 
