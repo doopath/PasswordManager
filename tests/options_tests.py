@@ -1,3 +1,5 @@
+""" Tests of the 'options' module. """
+
 import unittest
 import os
 import sys
@@ -94,6 +96,43 @@ class OptionsTest(unittest.TestCase):
             is_removed = True
 
         assert is_removed, "The 'remove_property' function should remove the property!"
+
+
+    def test_get_store(self):
+        store = options.get_store(self.password, _decrypt=True)
+
+        is_store_correct = store == ""
+
+        options.add_property(self.prop_name, self.prop_value, self.password)
+        store = options.get_store(self.password, _decrypt=True)
+
+        is_store_correct = is_store_correct and store == f"{self.prop_name} = {self.prop_value}"
+
+        assert is_store_correct, "The gotten store isn't correct!"
+
+
+    def test_encrypt_decrypt(self):
+        key = self.password.encode("utf-8")
+        source = self.prop_value
+        encryted_source = options.encrypt(key, source.encode("utf-8"))
+        decrypted_source = options.decrypt(key, encryted_source)
+
+        is_everything_right = decrypted_source == source
+
+        assert is_everything_right, "Decrypted data doesn't equal the initial one!"
+
+
+    def test_save_get_store(self):
+        options.add_property(self.prop_name, self.prop_value, self.password)
+        new_store_value = ""
+        new_store = options.encrypt(self.password.encode("utf-8"), new_store_value.encode("utf-8"))
+        options.save_store(new_store, overwrite=True)
+        store = options.get_store(self.password, _decrypt=True)
+
+        is_store_correct = store == new_store_value
+
+        assert is_store_correct, "The 'save_store' functions should change the store value!"\
+            " And the 'get_store' one should returns it correctly!"
 
 
 def test():
