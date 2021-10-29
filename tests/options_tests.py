@@ -16,6 +16,7 @@ class OptionsTest(unittest.TestCase):
         self.backup_path = f"{self.work_dir}/backups"
         self._remove_store_if_exists()
         self._remove_backup_if_exists()
+        options.initialize_store(self.password)
 
 
     def tearDown(self):
@@ -43,13 +44,11 @@ class OptionsTest(unittest.TestCase):
 
 
     def test_initialize_store(self):
-        options.initialize_store(self.password)
         assert os.path.isfile(self.store_path),\
                 "The 'initialize_store' function should create a store!"
 
 
     def test_make_store_backup(self):
-        options.initialize_store(self.password)
         options.make_store_backup()
         date = datetime.date.today().strftime("/%d_%m_%Y_")
         backup_file_path = self.backup_path + date + self.store_path.split("/")[-1]
@@ -61,6 +60,29 @@ class OptionsTest(unittest.TestCase):
 
         assert is_backup_right,\
             "The 'make_store_backup' function should create a backup of current store!"
+
+
+    def test_add_property_get_value(self):
+        options.add_property(self.prop_name, self.prop_value, self.password)
+        value = options.get_value(self.prop_name, self.password)
+
+        is_value_right = self.prop_value == value
+
+        assert is_value_right, "The added property should have correct value!"
+
+
+    def test_set_value(self):
+        options.add_property(self.prop_name, self.prop_value, self.password)
+        new_value = "newValue"
+        options.set_value(self.prop_name, new_value, self.password)
+        value = options.get_value(self.prop_name, self.password)
+
+        print(f"\n'{value}'")
+        print(f"\n'{new_value}'")
+        options.show_store(self.password)
+        is_value_right = value == new_value
+
+        assert is_value_right, "The set property should have correct value!"
 
 
 def test():

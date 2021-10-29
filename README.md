@@ -1,7 +1,7 @@
 # PasswordManager
 
 ## Description
-**PasswordManager** is command-line program that helps you manage your secret files like passwords.
+**PasswordManager** is a command-line program that helps you manage your secret files like passwords.
 It's very minimalistic and easy to use.
 
 ## Installation
@@ -31,4 +31,4 @@ doopass --add-property <name> <value> <password?>
 doopass --get-value <name> <password?>
 ```
 
-You can add and get a value from the global store. The *name* parameter is something like key which be used later to get the set value. You also have an ability to pass or not your password as an argument. If you don't, the **PasswordManager** ask you to enter it (the password won't be shown).
+You can add and get a value from the global store. The *name* parameter is a key which be used later to get the set value. You also have an ability to pass or not your password as an argument. If you don't, the **PasswordManager** ask you to enter it (the password won't be shown).

@@ -9,6 +9,10 @@ from Crypto.Hash import SHA256
 from Crypto import Random
 from core.constants import STORE_FILE
 from core.constants import STORE_BACKUPS_DIR
+from core.exceptions import StoreIsNotInitializedError
+from core.exceptions import PropertyAlreadyExistError
+from core.exceptions import PropertyDoesNotExistError
+from core.exceptions import IncorrectPasswordError
 
 
 does_property_exist = lambda s, p: p in [ l.split("=")[0].strip() for l in s.split("\n") ]
@@ -21,7 +25,7 @@ def save_store(store: str, overwrite=False):
     """
 
     if not path.isfile(STORE_FILE) and not overwrite:
-        raise Exception("Store isn't initialized!")
+        raise StoreIsNotInitializedError("Store isn't initialized!")
 
     write_mode = "w+" if not overwrite else "w"
 
@@ -67,7 +71,7 @@ def decrypt(key, source, decode=True):
     padding = data[-1]
 
     if data[-padding:] != bytes([padding]) * padding:
-        raise ValueError("Password is incorrect!")
+        raise IncorrectPasswordError("Password is incorrect!")
 
     return data[:-padding].decode("utf-8")
 
@@ -113,7 +117,7 @@ def get_value(name: str, password: str):
             value = items[1].strip()
 
     if value is None:
-        raise ValueError(f"The property '{name}' is not set in the store!")
+        raise PropertyDoesNotExistError(f"The property '{name}' is not set in the store!")
 
     return value
 
@@ -130,7 +134,7 @@ def add_property(name: str, value: str, password: str):
     store = get_store(password, _decrypt=True)
 
     if does_property_exist(store, name):
-        raise Exception(f"This property ({name}) already exists!")
+        raise PropertyAlreadyExistError(f"This property ({name}) already exists!")
 
     store += f"\n{name} = {value}"
     store = encrypt(password.encode("utf-8"), store.encode("utf-8"))
@@ -142,7 +146,7 @@ def modify_property(name: str, password: str, f):
     store = get_store(password, _decrypt=True)
 
     if not does_property_exist(store, name):
-        raise Exception(f"The property ({name}) does not exist!")
+        raise PropertyDoesNotExistError(f"The property ({name}) does not exist!")
 
     store = [ l for l in store.split("\n") ]
 
@@ -154,6 +158,8 @@ def modify_property(name: str, password: str, f):
 
     store = "\n".join(store)
     store = encrypt(password.encode("utf-8"), store.encode("utf-8"))
+
+    save_store(store)
 
 def remove_property(name: str, password: str):
     """
