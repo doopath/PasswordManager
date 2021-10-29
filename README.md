@@ -14,13 +14,10 @@ Or another way, with compiling:
 ```bash
 # PasswordManager supports version of python 3.4 or higher.
 git clone https://github.com/doopath/PasswordManager.git
-cd PasswordManager
-python3 -m pip install -r dependencies.txt
-pyinstaller -F -n doopass main.py
-cd dist
+python3 -m pip install -r ./PasswordManager/dependencies.txt
+chmod +x ./PasswordManager/doopass
 mkdir -p ~/.local/bin/PasswordManager
-chmod +x doopass
-cp doopass ~/.local/bin/PasswordManager
+cp -r ./PasswordManager/* ~/.local/bin/PasswordManager
 
 # Also add this line with exporting PATH variable to
 # a config file of your shell (for example: ~/.bashrc)
