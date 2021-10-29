@@ -5,22 +5,30 @@
 It's very minimalistic and easy to use.
 
 ## Installation
-There are two ways: install a remote pip3 package, or download the code and install manually.
-<br />
-The first one:
+I should say you can use the **PasswordManager** without compilation, so just clone the repository and m      ove the downloaded directory somewhere (for example: ~/.local/bin). Rename main.py to doopass.py and add       the app directory to the PATH variable. Just like this:
 ```bash
-# PasswordManager supports version of python 3.4 or higher.
-python3 -m pip install doopass
-doopass --init
+
 ```
 
-The second one:
+Or another way, with compiling:
 ```bash
+# PasswordManager supports version of python 3.4 or higher.
 git clone https://github.com/doopath/PasswordManager.git
 cd PasswordManager
-python3 -m pip install .
-doopass --init
+python3 -m pip install -r dependencies.txt
+pyinstaller -F -n doopass main.py
+cd dist
+mkdir -p ~/.local/bin/PasswordManager
+chmod +x doopass
+cp doopass ~/.local/bin/PasswordManager
+
+# Also add this line with exporting PATH variable to
+# a config file of your shell (for example: ~/.bashrc)
+export PATH="$PATH:$HOME/.local/bin/PasswordManager"
+echo ""
+~/.local/bin/PasswordManager/doopass --init
 ```
+
 
 ## Features:
 The **PasswordManager** provides a few commands (see *--help* option for more information).

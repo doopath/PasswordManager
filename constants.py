@@ -1,6 +1,6 @@
 """ A list of constants for the PasswordManager. """
 
-import os
+import sys
 
 VERSION = "1.0"
 HELP_LIST = "\n".join([
@@ -18,5 +18,5 @@ HELP_LIST = "\n".join([
     "#################################################################################"
 ])
 
-STORE_FILE = f"{os.getcwd()}/store.enc"
-STORE_BACKUPS_DIR = f"{os.getcwd()}/backups"
+STORE_FILE = f"{sys.path[0]}/store.enc"
+STORE_BACKUPS_DIR = f"{sys.path[0]}/backups"
