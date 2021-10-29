@@ -1,4 +1,5 @@
 backups
+build
 store.enc
 dist
-./*__pycache__
+__pycache__
