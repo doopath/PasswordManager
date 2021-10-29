@@ -5,12 +5,8 @@
 It's very minimalistic and easy to use.
 
 ## Installation
-I should say you can use the **PasswordManager** without compilation, so just clone the repository and m      ove the downloaded directory somewhere (for example: ~/.local/bin). Rename main.py to doopass.py and add       the app directory to the PATH variable. Just like this:
-```bash
-
-```
-
-Or another way, with compiling:
+I just tried to make installation process as easy as possible.
+Obviously the **PasswordManager** requires the installed Python3.
 ```bash
 # PasswordManager supports version of python 3.4 or higher.
 git clone https://github.com/doopath/PasswordManager.git
