@@ -2,7 +2,7 @@
 """ A python module that helps you to manage your secret data. """
 
 import sys
-import option_aliases
+from core import option_aliases
 
 
 OPTIONS = {

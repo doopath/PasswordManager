@@ -7,8 +7,8 @@ from os import mkdir
 from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
 from Crypto import Random
-from constants import STORE_FILE
-from constants import STORE_BACKUPS_DIR
+from core.constants import STORE_FILE
+from core.constants import STORE_BACKUPS_DIR
 
 
 does_property_exist = lambda s, p: p in [ l.split("=")[0].strip() for l in s.split("\n") ]

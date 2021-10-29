@@ -2,9 +2,9 @@
 
 from getpass import getpass
 import pyperclip
-import options
-from constants import HELP_LIST
-from constants import VERSION
+from core import options
+from core.constants import HELP_LIST
+from core.constants import VERSION
 
 
 def get_password(args, i: int):
