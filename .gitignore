@@ -1,0 +1,4 @@
+backups
+store.enc
+dist
+./*__pycache__
