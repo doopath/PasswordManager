@@ -237,11 +237,16 @@ def initialize_store(password: str):
     """
 
     if path.isfile(STORE_FILE):
-        answ = input("The store already had been initialized, overwrite? (y/n): ")
-        if answ.lower() == "n": return
-        elif answ.lower() != "y":
-            print("The store was successfully initialized!")
-            initialize_store(password)
+        answ = input("The store already had been initialized, overwrite? (y/n): ").lower()
+        if answ == "n":
+            return False
+        elif answ == "y":
+            save_store(encrypt(password.encode("utf-8"), "".encode("utf-8")), overwrite=True)
+            return True
+        else:
+            return initialize_store(password)
 
-    save_store(encrypt(password.encode("utf-8"), "".encode("utf-8")), overwrite=True)
+    else:
+        save_store(encrypt(password.encode("utf-8"), "".encode("utf-8")), overwrite=True)
+        return True
 

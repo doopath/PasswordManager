@@ -83,6 +83,6 @@ def initialize_store(args):
         initialize_store(args)
         return
 
-    options.initialize_store(password1)
-    print("\nThe store was successfully initialized!")
+    if options.initialize_store(password1):
+        print("\nThe store was successfully initialized!")
 

@@ -1,0 +1,14 @@
+# if you want to install the PasswordManager, then follow these inctructions
+# or just execute this file with 'bash ./installing.txt'
+
+# PasswordManager supports version of python 3.4 or higher.
+python3 -m pip install -r ./dependencies.txt
+chmod +x ./doopass
+mkdir -p ~/.local/bin/PasswordManager
+cp -r ./* ~/.local/bin/PasswordManager/
+
+# Also add this line with exporting PATH variable to
+# a config file of your shell (for example: ~/.bashrc)
+export PATH="$PATH:$HOME/.local/bin/PasswordManager"
+echo ""
+~/.local/bin/PasswordManager/doopass --init

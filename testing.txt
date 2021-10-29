@@ -1,0 +1,2 @@
+If you want to test the PasswordManager, just execute this:
+python3 -m unittest ./tests/*tests.py
