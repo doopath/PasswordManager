@@ -2,20 +2,35 @@
 
 import base64
 import datetime
-from os import path
-from os import mkdir
-from Crypto.Cipher import AES
-from Crypto.Hash import SHA256
-from Crypto import Random
-from core.constants import STORE_FILE
-from core.constants import STORE_BACKUPS_DIR
-from core.exceptions import StoreIsNotInitializedError
-from core.exceptions import PropertyAlreadyExistError
-from core.exceptions import PropertyDoesNotExistError
-from core.exceptions import IncorrectPasswordError
+import os
+import secrets
+from base64 import urlsafe_b64decode as b64d
+from base64 import urlsafe_b64encode as b64e
+from os import mkdir, path
+
+from cryptography.fernet import (Fernet, InvalidToken)
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+
+from core.constants import STORE_BACKUPS_DIR, STORE_FILE
+from core.exceptions import (IncorrectPasswordError, PropertyAlreadyExistError,
+                             PropertyDoesNotExistError,
+                             StoreIsNotInitializedError)
 
 
+BACKEND = default_backend()
+ITERATIONS = 100_000
 does_property_exist = lambda s, p: p in [ l.split("=")[0].strip() for l in s.split("\n") ]
+
+
+def _derive_key(password: bytes, salt: bytes, iterations: int = ITERATIONS) -> bytes:
+    """Derive a secret key from a given password and salt"""
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(), length=32, salt=salt,
+        iterations=iterations, backend=BACKEND)
+    return b64e(kdf.derive(password))
+
 
 def save_store(store: str, overwrite=False):
     """
@@ -33,26 +48,27 @@ def save_store(store: str, overwrite=False):
         file.write(store)
 
 
-def encrypt(key, source, encode=True):
+def encrypt(key: bytes, source: bytes, iterations: int = ITERATIONS) -> str:
     """
     Usage:
         pass a key (password) as a list of bytes,
-        pass a source as an array of bytes.
-    Return:
-        encrypted data as a string if encode=True otherwise a list of bytes.
+        pass a source as a list of bytes.
+    Returns:
+        encrypted source as a list of bytes.
     """
 
-    key = SHA256.new(key).digest()
-    IV = Random.new().read(AES.block_size)
-    encryptor = AES.new(key, AES.MODE_CBC, IV)
-    padding = AES.block_size - len(source) % AES.block_size
-    source += bytes([padding]) * padding
-    data = IV + encryptor.encrypt(source)
+    salt = secrets.token_bytes(16)
+    key = _derive_key(key, salt, iterations)
+    return b64e(
+        b'%b%b%b' % (
+            salt,
+            iterations.to_bytes(4, 'big'),
+            b64d(Fernet(key).encrypt(source)),
+        )
+    ).decode()
 
-    return base64.b64encode(data).decode("latin-1") if encode else data
 
-
-def decrypt(key, source, decode=True):
+def decrypt(key: bytes, source: bytes) -> str:
     """
     Usage:
         pass a key (password) as a list of bytes,
@@ -61,22 +77,18 @@ def decrypt(key, source, decode=True):
         decrypted data as a string.
     """
 
-    if decode:
-        source = base64.b64decode(source.encode("latin-1"))
+    decoded = b64d(source)
+    salt, iter, token = decoded[:16], decoded[16:20], b64e(decoded[20:])
+    iterations = int.from_bytes(iter, 'big')
+    key = _derive_key(key, salt, iterations)
 
-    key = SHA256.new(key).digest()
-    IV = source[:AES.block_size]
-    decryptor = AES.new(key, AES.MODE_CBC, IV)
-    data = decryptor.decrypt(source[AES.block_size:])
-    padding = data[-1]
-
-    if data[-padding:] != bytes([padding]) * padding:
+    try:
+        return Fernet(key).decrypt(token).decode()
+    except InvalidToken:
         raise IncorrectPasswordError("Password is incorrect!")
 
-    return data[:-padding].decode("utf-8")
 
-
-def get_store(password=None, _decrypt=False, _path=STORE_FILE):
+def get_store(password: str=None, _decrypt: bool=False, _path: str=STORE_FILE):
     """
     Usage:
         pass a password as a string (optional),
@@ -97,7 +109,7 @@ def get_store(password=None, _decrypt=False, _path=STORE_FILE):
         return content
 
 
-def get_value(name: str, password: str):
+def get_value(name: str, password: str) -> str:
     """
     Usage:
         pass a name of a property as a string (name of a property in the store),
@@ -209,7 +221,7 @@ def make_store_backup():
         backup.write(store)
 
 
-def show_store(password: str, store_path=STORE_FILE):
+def show_store(password: str, store_path: str=STORE_FILE):
     """
     Show decrypted store.
     Usage:

@@ -7,6 +7,7 @@ import datetime
 from core import options
 from core import constants
 from core.exceptions import PropertyDoesNotExistError
+from core.exceptions import IncorrectPasswordError
 
 
 class OptionsTest(unittest.TestCase):
@@ -133,6 +134,18 @@ class OptionsTest(unittest.TestCase):
 
         assert is_store_correct, "The 'save_store' functions should change the store value!"\
             " And the 'get_store' one should returns it correctly!"
+
+
+    def test_incorrect_password(self):
+        is_everything_right = False
+
+        try:
+            options.get_store("wrong password", _decrypt=True)
+        except IncorrectPasswordError:
+            is_everything_right = True
+
+        assert is_everything_right, ("The 'get_store' function should raise the IncorrectPasswordError" +
+            " if the given password isn't correct!")
 
 
 def test():
