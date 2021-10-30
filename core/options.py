@@ -1,8 +1,6 @@
 """ A list of options for the PasswordManager.  """
 
-import base64
 import datetime
-import os
 import secrets
 from base64 import urlsafe_b64decode as b64d
 from base64 import urlsafe_b64encode as b64e
