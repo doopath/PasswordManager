@@ -2,10 +2,10 @@
 
 import sys
 
-VERSION = "1.2"
+VERSION = "1.3"
 HELP_LIST = "\n".join([
     "##################################################################################################",
-    "#                                      PasswordManager  v1.2                                     #",
+    "#                                      PasswordManager  v1.3                                     #",
     "# Created by Doopath:                                                                            #",
     "# Repo: https://github.com/doopath/PasswordManager                                               #",
     "# List of availabe options:                                                                      #",
