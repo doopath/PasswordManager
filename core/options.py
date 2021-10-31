@@ -16,10 +16,12 @@ from core.exceptions import (IncorrectPasswordError, PropertyAlreadyExistError,
                              PropertyDoesNotExistError,
                              StoreIsNotInitializedError)
 
-
 BACKEND = default_backend()
 ITERATIONS = 100_000
-does_property_exist = lambda s, p: p in [ l.split("=")[0].strip() for l in s.split("\n") ]
+
+
+def does_property_exist(store: str, prop: str) -> bool:
+    return prop in [line.split("=")[0].strip() for line in store.split("\n")]
 
 
 def _derive_key(password: bytes, salt: bytes, iterations: int = ITERATIONS) -> bytes:
@@ -30,7 +32,7 @@ def _derive_key(password: bytes, salt: bytes, iterations: int = ITERATIONS) -> b
     return b64e(kdf.derive(password))
 
 
-def save_store(store: str, overwrite=False):
+def save_store(store: str, overwrite=False) -> None:
     """
     Save encrypted store on the disk.
     Usage:
@@ -86,7 +88,7 @@ def decrypt(key: bytes, source: bytes) -> str:
         raise IncorrectPasswordError("Password is incorrect!")
 
 
-def get_store(password: str=None, _decrypt: bool=False, _path: str=STORE_FILE):
+def get_store(password: str = None, _decrypt: bool = False, _path: str = STORE_FILE) -> str | None:
     """
     Usage:
         pass a password as a string (optional),
@@ -102,7 +104,7 @@ def get_store(password: str=None, _decrypt: bool=False, _path: str=STORE_FILE):
         if _decrypt and password:
             password = password.encode("utf-8")
             content = decrypt(password, content).strip("\n").split("\n")
-            content = "\n".join(set([ l.strip() for l in content ]))
+            content = "\n".join(set([l.strip() for l in content]))
 
         return content
 
@@ -132,7 +134,7 @@ def get_value(name: str, password: str) -> str:
     return value
 
 
-def add_property(name: str, value: str, password: str):
+def add_property(name: str, value: str, password: str) -> None:
     """
     Add a property to the store.
     Usage:
@@ -152,16 +154,16 @@ def add_property(name: str, value: str, password: str):
     save_store(store)
 
 
-def modify_property(name: str, password: str, f):
+def modify_property(name: str, password: str, f) -> None:
     store = get_store(password, _decrypt=True)
 
     if not does_property_exist(store, name):
         raise PropertyDoesNotExistError(f"The property ({name}) does not exist!")
 
-    store = [ l for l in store.split("\n") ]
+    store = [l for l in store.split("\n")]
 
     for line in store:
-        items = [ x.strip() for x in line.split("=") ]
+        items = [x.strip() for x in line.split("=")]
 
         if items[0] == name:
             f(store, line)
@@ -172,13 +174,14 @@ def modify_property(name: str, password: str, f):
     save_store(store)
 
 
-def remove_property(name: str, password: str):
+def remove_property(name: str, password: str) -> None:
     """
     Remove a set property from the store.
     Usage:
         pass a name of property to remove as a string,
         pass a password as a string.
     """
+
     def f(s, l):
         if l not in s:
             raise PropertyDoesNotExistError(f"The property ({name}) does not exist!")
@@ -187,7 +190,7 @@ def remove_property(name: str, password: str):
     modify_property(name, password, f)
 
 
-def set_value(name: str, value: str, password: str):
+def set_value(name: str, value: str, password: str) -> None:
     """
     Set a value of a property in the store.
     Usage:
@@ -197,10 +200,11 @@ def set_value(name: str, value: str, password: str):
     """
 
     def f(s, l): s[s.index(l)] = f"{name} = {value}"
+
     modify_property(name, password, f)
 
 
-def make_store_backup():
+def make_store_backup() -> None:
     """
     Make a backup of the current store.
     New backup will be saved on <app_dir>/backups/
@@ -219,7 +223,7 @@ def make_store_backup():
         backup.write(store)
 
 
-def show_store(password: str, store_path: str=STORE_FILE):
+def show_store(password: str, store_path: str = STORE_FILE) -> None:
     """
     Show decrypted store.
     Usage:
@@ -233,7 +237,7 @@ def show_store(password: str, store_path: str=STORE_FILE):
     store = get_store(password, _decrypt=True, _path=store_path)
 
     if store.strip().strip("\n") == "":
-        store =  "*The store is empty (see --help)*"
+        store = "*The store is empty (see --help)*"
 
     print("\n#########################################")
     print("Your passwords (shown as <name = value>):\n")
@@ -241,9 +245,9 @@ def show_store(password: str, store_path: str=STORE_FILE):
     print("\n#########################################\n")
 
 
-def initialize_store(password: str):
+def initialize_store(password: str) -> bool:
     """
-    Initialze a new store.
+    Initialize a new store.
     """
 
     if path.isfile(STORE_FILE):
@@ -259,4 +263,3 @@ def initialize_store(password: str):
     else:
         save_store(encrypt(password.encode("utf-8"), "".encode("utf-8")), overwrite=True)
         return True
-

@@ -9,6 +9,7 @@ HELP_LIST = "\n".join([
     "# Created by Doopath:                                                                            #",
     "# Repo: https://github.com/doopath/PasswordManager                                               #",
     "# List of availabe options:                                                                      #",
+    "# --init | -i                                        | initialize a new store                    #",
     "# --get-value | -gv <prop name> <password?>          | get a value of a property                 #",
     "# --get-gh-token | -ggh <password?>                  | get your github token (shout be defined)  #",
     "# --set-value | -sv <name> <value> <password?>       | set a value of a property                 #",

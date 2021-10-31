@@ -1,6 +1,8 @@
 backups
 build
 store.enc
+venv
+.idea
 dist
 __pycache__
 ./*/__pycache__
