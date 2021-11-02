@@ -2,16 +2,16 @@
 
 import sys
 
-VERSION = "1.4"
+VERSION = "1.5"
 HELP_LIST = "\n".join([
     "##################################################################################################",
-    "#                                      PasswordManager  v1.4                                     #",
+    "#                                      PasswordManager  v1.5                                     #",
     "# Created by Doopath:                                                                            #",
     "# Repo: https://github.com/doopath/PasswordManager                                               #",
     "# List of availabe options:                                                                      #",
     "# --init | -i                                        | initialize a new store                    #",
     "# --get-value | -gv <prop name> <password?>          | get a value of a property                 #",
-    "# --get-gh-token | -ggh <password?>                  | get your github token (shout be defined)  #",
+    "# --get-gh-token | -ggt <password?>                  | get your github token (shout be defined)  #",
     "# --set-value | -sv <name> <value> <password?>       | set a value of a property                 #",
     "# --add-property | -ap <name> <value> <password?>    | add a <name> <value> pair to the store    #",
     "# --remove-property | -rp <name> <value> <password?> | add a <name> <value> pair to the store    #",

@@ -78,8 +78,8 @@ def decrypt(key: bytes, source: bytes) -> str:
     """
 
     decoded = b64d(source)
-    salt, iter, token = decoded[:16], decoded[16:20], b64e(decoded[20:])
-    iterations = int.from_bytes(iter, 'big')
+    salt, itr, token = decoded[:16], decoded[16:20], b64e(decoded[20:])
+    iterations = int.from_bytes(itr, 'big')
     key = _derive_key(key, salt, iterations)
 
     try:

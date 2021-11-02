@@ -1,10 +1,21 @@
 """ A list of option aliases. """
 
 from getpass import getpass
+from typing import Callable
 import pyperclip
 from core import options
 from core.constants import HELP_LIST
 from core.constants import VERSION
+
+
+def parse_arguments_safely(f: Callable) -> Callable:
+    def inner(*args):
+        try:
+            f(args)
+        except IndexError:
+            raise Exception("Incorrect count of passed arguments!")
+
+    return inner
 
 
 def get_password(args, i: int):
@@ -14,6 +25,7 @@ def get_password(args, i: int):
     return getpass("Password for the store: ")
 
 
+@parse_arguments_safely
 def get_value(args):
     name = args[0]
     password = get_password(args, 1)
@@ -36,6 +48,7 @@ def get_gh_token(args):
     get_value(["github-token"] + args)
 
 
+@parse_arguments_safely
 def set_value(args):
     name = args[0]
     value = args[1]
@@ -45,6 +58,7 @@ def set_value(args):
     print("\nProperty was successfully set!")
 
 
+@parse_arguments_safely
 def add_property(args):
     name = args[0]
     value = args[1]
@@ -54,6 +68,7 @@ def add_property(args):
     print("\nProperty was successfully added!")
 
 
+@parse_arguments_safely
 def remove_property(args):
     name = args[0]
     password = get_password(args, 1)
