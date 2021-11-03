@@ -10,8 +10,7 @@ Obviously the **PasswordManager** requires the installed Python3.
 ```bash
 # PasswordManager supports version of python 3.4 or higher.
 git clone https://github.com/doopath/PasswordManager.git
-# Doocutor requires python v3.10!
-python3.10 -m pip install -r ./PasswordManager/dependencies.txt
+python3 -m pip install -r ./PasswordManager/dependencies.txt
 chmod +x ./PasswordManager/doopass
 mkdir -p ~/.local/bin/PasswordManager
 cp -r ./PasswordManager/* ~/.local/bin/PasswordManager
