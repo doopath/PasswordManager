@@ -2,6 +2,7 @@
 
 import datetime
 import secrets
+from typing import Optional
 from base64 import urlsafe_b64decode as b64d
 from base64 import urlsafe_b64encode as b64e
 from os import mkdir, path
@@ -88,7 +89,7 @@ def decrypt(key: bytes, source: bytes) -> str:
         raise IncorrectPasswordError("Password is incorrect!")
 
 
-def get_store(password: str = None, _decrypt: bool = False, _path: str = STORE_FILE) -> str | None:
+def get_store(password: str = None, _decrypt: bool = False, _path: str = STORE_FILE) -> Optional[str]:
     """
     Usage:
         pass a password as a string (optional),
