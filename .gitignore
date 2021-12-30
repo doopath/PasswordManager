@@ -1,8 +1,13 @@
 backups
-build
 store.enc
-venv
-.idea
+
+build
 dist
+venv
+
+.idea
+.vscode
+
 __pycache__
 ./*/__pycache__
+.mypy_cache
