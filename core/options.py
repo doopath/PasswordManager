@@ -17,6 +17,7 @@ from core.exceptions import (IncorrectPasswordError, PropertyAlreadyExistError,
                              PropertyDoesNotExistError,
                              StoreIsNotInitializedError)
 
+
 BACKEND = default_backend()
 ITERATIONS = 100_000
 
@@ -89,7 +90,7 @@ def decrypt(key: bytes, source: bytes) -> str:
         raise IncorrectPasswordError("Password is incorrect!")
 
 
-def get_store(password: str = None, _decrypt: bool = False, _path: str = STORE_FILE) -> Optional[str]:
+def get_store(password: str = None, _decrypt: bool = False, _path: str = STORE_FILE) -> str | bytes:
     """
     Usage:
         pass a password as a string (optional),
@@ -100,11 +101,11 @@ def get_store(password: str = None, _decrypt: bool = False, _path: str = STORE_F
     """
 
     with open(_path, "rb") as store:
-        content = store.read().decode("utf-8")
+        content = store.read()
 
         if _decrypt and password:
-            password = password.encode("utf-8")
-            content = decrypt(password, content).strip("\n").split("\n")
+            user_password: bytes = password.encode("utf-8")
+            content = decrypt(user_password, content).strip("\n").split("\n")
             content = "\n".join(set([l.strip() for l in content]))
 
         return content
@@ -119,18 +120,19 @@ def get_value(name: str, password: str) -> str:
         a value of the property
     """
 
-    store_content = get_store(password, True)
-    store_content = store_content.split("\n")
+    store_content = str(get_store(password, _decrypt=True))
+    content = store_content.split("\n")
     value = None
 
-    for line in store_content:
+    for line in content:
         items = line.split("=")
 
         if items[0].strip() == name:
             value = items[1].strip()
 
     if value is None:
-        raise PropertyDoesNotExistError(f"The property '{name}' is not set in the store!")
+        raise PropertyDoesNotExistError(
+            f"The property '{name}' is not set in the store!")
 
     return value
 
@@ -144,10 +146,11 @@ def add_property(name: str, value: str, password: str) -> None:
         pass a password for store decryption and encryption.
     """
 
-    store = get_store(password, _decrypt=True)
+    store = str(get_store(password, _decrypt=True))
 
     if does_property_exist(store, name):
-        raise PropertyAlreadyExistError(f"This property ({name}) already exists!")
+        raise PropertyAlreadyExistError(
+            f"This property ({name}) already exists!")
 
     store += f"\n{name} = {value}"
     store = encrypt(password.encode("utf-8"), store.encode("utf-8"))
@@ -156,10 +159,11 @@ def add_property(name: str, value: str, password: str) -> None:
 
 
 def modify_property(name: str, password: str, f) -> None:
-    store = get_store(password, _decrypt=True)
+    store = str(get_store(password, _decrypt=True))
 
     if not does_property_exist(store, name):
-        raise PropertyDoesNotExistError(f"The property ({name}) does not exist!")
+        raise PropertyDoesNotExistError(
+            f"The property ({name}) does not exist!")
 
     store = [l for l in store.split("\n")]
 
@@ -185,7 +189,8 @@ def remove_property(name: str, password: str) -> None:
 
     def f(s, l):
         if l not in s:
-            raise PropertyDoesNotExistError(f"The property ({name}) does not exist!")
+            raise PropertyDoesNotExistError(
+                f"The property ({name}) does not exist!")
         s.pop(s.index(l))
 
     modify_property(name, password, f)
@@ -215,13 +220,14 @@ def make_store_backup() -> None:
     current_date = date.strftime("%d_%m_%Y")
     store_name = STORE_FILE.split("/")[-1]
     backup_name = f"{str(current_date)}_{store_name}"
-    store = get_store()
+    guess_store = get_store()
+    store: bytes = guess_store if type(guess_store) is bytes else bytes()
 
     if not path.isdir(STORE_BACKUPS_DIR):
         mkdir(STORE_BACKUPS_DIR)
 
     with open(f"{STORE_BACKUPS_DIR}/{backup_name}", "w+") as backup:
-        backup.write(store)
+        backup.write(store.decode())
 
 
 def show_store(password: str, store_path: str = STORE_FILE) -> None:
@@ -235,7 +241,7 @@ def show_store(password: str, store_path: str = STORE_FILE) -> None:
     if not path.isfile(store_path):
         raise Exception("File on path={store_path} does not exist!")
 
-    store = get_store(password, _decrypt=True, _path=store_path)
+    store = str(get_store(password, _decrypt=True, _path=store_path))
 
     if store.strip().strip("\n") == "":
         store = "*The store is empty (see --help)*"
@@ -252,15 +258,18 @@ def initialize_store(password: str) -> bool:
     """
 
     if path.isfile(STORE_FILE):
-        answ = input("The store already had been initialized, overwrite? (y/n): ").lower()
+        answ = input(
+            "The store already had been initialized, overwrite? (y/n): ").lower()
         if answ == "n":
             return False
         elif answ == "y":
-            save_store(encrypt(password.encode("utf-8"), "".encode("utf-8")), overwrite=True)
+            save_store(encrypt(password.encode("utf-8"),
+                               "".encode("utf-8")), overwrite=True)
             return True
         else:
             return initialize_store(password)
 
     else:
-        save_store(encrypt(password.encode("utf-8"), "".encode("utf-8")), overwrite=True)
+        save_store(encrypt(password.encode("utf-8"),
+                           "".encode("utf-8")), overwrite=True)
         return True

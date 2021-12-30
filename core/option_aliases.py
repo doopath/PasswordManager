@@ -9,7 +9,7 @@ from core.constants import VERSION
 
 
 def parse_arguments_safely(f: Callable) -> Callable:
-    def inner(*args):
+    def inner(args):
         try:
             f(args)
         except IndexError:
@@ -41,7 +41,8 @@ def show_store(args):
 
     if len(args) == 2:
         options.show_store(password, store_path=args[1])
-    else: options.show_store(password)
+    else:
+        options.show_store(password)
 
 
 def get_gh_token(args):
@@ -90,8 +91,8 @@ def show_version(_):
 
 
 def initialize_store(args):
-    password1 = getpass("Enter a passwrod for a new store: ")
-    password2 = getpass("Repeat the passwrod: ")
+    password1 = getpass("Enter a password for a new store: ")
+    password2 = getpass("Repeat the password: ")
 
     if password1 != password2:
         print("The password doesn't match!\n")
@@ -100,4 +101,3 @@ def initialize_store(args):
 
     if options.initialize_store(password1):
         print("\nThe store was successfully initialized!")
-
