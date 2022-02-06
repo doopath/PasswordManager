@@ -24,7 +24,6 @@ class OptionsTest(unittest.TestCase):
 
     def _remove_if_exists(self, path: str):
         if os.path.isfile(path):
-
             os.remove(path)
 
     def _remove_store_if_exists(self):
@@ -38,14 +37,14 @@ class OptionsTest(unittest.TestCase):
             return str(file.read())
 
     def test_initialize_store(self):
-        assert os.path.isfile(self.store_path),\
+        assert os.path.isfile(self.store_path), \
             "The 'initialize_store' function should create a store!"
 
     def test_make_store_backup(self):
         options.make_store_backup()
         date = datetime.date.today().strftime("/%d_%m_%Y_")
         backup_file_path = self.backup_path + \
-            date + self.store_path.split("/")[-1]
+                           date + self.store_path.split("/")[-1]
 
         is_backup_right = os.path.isdir(self.backup_path)
         is_backup_right = is_backup_right and os.path.isfile(backup_file_path)
