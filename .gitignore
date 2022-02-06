@@ -3,6 +3,7 @@ build
 store.enc
 venv
 .idea
+.idea.bak
 dist
 __pycache__
 ./*/__pycache__
