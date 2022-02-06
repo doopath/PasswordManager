@@ -17,7 +17,6 @@ from core.exceptions import (IncorrectPasswordError, PropertyAlreadyExistError,
                              PropertyDoesNotExistError,
                              StoreIsNotInitializedError)
 
-
 BACKEND = default_backend()
 ITERATIONS = 100_000
 
@@ -235,7 +234,7 @@ def show_store(password: str, store_path: str = STORE_FILE) -> None:
     Show decrypted store.
     Usage:
         pass a password as a string,
-        pass a store location as a string (optional).
+        pass a store location path as a string (optional).
     """
 
     if not path.isfile(store_path):
@@ -247,7 +246,32 @@ def show_store(password: str, store_path: str = STORE_FILE) -> None:
         store = "*The store is empty (see --help)*"
 
     print("\n#########################################")
-    print("Your passwords (shown as <name = value>):\n")
+    print("Your data (shown as <name = value>):\n")
+    print(store)
+    print("\n#########################################\n")
+
+
+def show_store_keys(password: str, store_path: str = STORE_FILE) -> None:
+    """
+    Show store keys.
+    Usage:
+        pass a password as a string,
+        pass a store location path as a string (optional).
+    """
+
+    if not path.isfile(store_path):
+        raise Exception("File on path={store_path} does not exist!")
+
+    store = str(get_store(password, _decrypt=True, _path=store_path))
+
+    if store.strip().strip("\n") == "":
+        store = "*The store is empty (see --help)*"
+    else:
+        store = "\n".join([line.split("=")[0].strip() for line in store.split("\n")])
+
+    print("\n#########################################")
+    print("Use 'doopass -gv <name>' command to get a value of a key.")
+    print("Your data (shown as <name>):\n")
     print(store)
     print("\n#########################################\n")
 
