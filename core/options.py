@@ -17,6 +17,7 @@ from core.exceptions import (IncorrectPasswordError, PropertyAlreadyExistError,
                              PropertyDoesNotExistError,
                              StoreIsNotInitializedError)
 
+
 BACKEND = default_backend()
 ITERATIONS = 100_000
 
