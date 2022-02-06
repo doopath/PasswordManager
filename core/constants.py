@@ -18,7 +18,7 @@ HELP_LIST = "\n".join([
     "# --make-backup | -mb                                            | make a backup of the current store        #",
     "# --show-store | -ss <path?> <password?>                         | show a store on <path> or the current one #",
     "# --show-keys  | -sk <path?> <password?>                         | show keys of a store at <path> or the     #",
-    "#                                                                | current one.                              #",
+    "#                                                                | current one                               #",
     "##############################################################################################################"
 ])
 
