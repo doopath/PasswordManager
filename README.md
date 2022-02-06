@@ -6,7 +6,7 @@ It's very minimalistic and easy to use.
 
 ## Installation
 I just tried to make installation process as easy as possible.
-Obviously the **PasswordManager** requires the installed Python3.
+The **PasswordManager** requires installed *Python 3.10* and *Git*.
 ```bash
 # PasswordManager supports version of python 3.4 or higher.
 git clone https://github.com/doopath/PasswordManager.git
