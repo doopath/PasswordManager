@@ -3,6 +3,7 @@
 import sys
 
 VERSION = "1.7"
+APP_DIR = sys.path[0]
 HELP_LIST = "\n".join([
     "##############################################################################################################",
     "#                                            PasswordManager  v1.7                                           #",
@@ -22,5 +23,5 @@ HELP_LIST = "\n".join([
     "##############################################################################################################"
 ])
 
-STORE_FILE = f"{sys.path[0]}/store.enc"
-STORE_BACKUPS_DIR = f"{sys.path[0]}/backups"
+STORE_FILE = f"{APP_DIR}/store.enc"
+STORE_BACKUPS_DIR = f"{APP_DIR}/backups"
