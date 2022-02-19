@@ -28,7 +28,7 @@ The **PasswordManager** provides a few commands (see *--help* option for more in
 The base ones:
 ```bash
 doopass --add-property <name> <value> <password?>
-doopass --get-value <name> <password?>
+doopass --get-value <name> <password?> show/hide
 ```
 
 You can add and get a value from the global store. The *name* parameter is a key which be used later to get the set value. You also have an ability to pass or not your password as an argument. If you don't, the **PasswordManager** ask you to enter it (the password won't be shown).
