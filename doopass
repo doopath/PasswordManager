@@ -2,6 +2,7 @@
 """ A python module that helps you to manage your secret data. """
 
 import sys
+from src.core.store import Store
 from textual.app import App, ComposeResult
 from textual import events
 from textual.widgets import Welcome, Header
@@ -14,7 +15,7 @@ class Doopass(App):
         self.screen.styles.background = "black"
 
     def compose(self) -> ComposeResult:
-        yield Header(show_clock=True, id='header')
+        yield Header(show_clock=True, id="header")
         yield Welcome()
 
     def on_key(self, event: events.Key) -> None:
@@ -22,8 +23,7 @@ class Doopass(App):
 
 
 def main():
-    app = Doopass()
-    app.run()
+    pass
 
 
 if __name__ == "__main__":

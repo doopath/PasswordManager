@@ -2,17 +2,15 @@
 
 import datetime
 import secrets
+import os
 from base64 import urlsafe_b64decode as b64d
 from base64 import urlsafe_b64encode as b64e
-from os import mkdir, path
-
 from cryptography.fernet import Fernet, InvalidToken
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-
-from core.constants import STORE_BACKUPS_DIR, STORE_FILE, APPDATA_DIR
-from core.exceptions import (
+from .constants import STORE_BACKUPS_DIR, STORE_FILE, APPDATA_DIR
+from .exceptions import (
     IncorrectPasswordError,
     PropertyAlreadyExistError,
     PropertyDoesNotExistError,
@@ -23,11 +21,11 @@ from core.exceptions import (
 class Store:
     ITERATIONS = 100_000
 
-    def __init__(self):
-        self.BACKEND = default_backend()
-
-    def does_property_exist(self, store: str, prop: str) -> bool:
-        return prop in [line.split("=")[0].strip() for line in store.split("\n")]
+    def __init__(self, password: str):
+        self.backend = default_backend()
+        self.password = password
+        self._initialize_store_file()
+        self.decrypted_store = str(self.get_store(_decrypt=True))
 
     def _derive_key(
         self, password: bytes, salt: bytes, iterations: int = ITERATIONS
@@ -38,26 +36,58 @@ class Store:
             length=32,
             salt=salt,
             iterations=iterations,
-            backend=self.BACKEND,
+            backend=self.backend,
         )
         return b64e(kdf.derive(password))
 
-    def save_store(self, store: str, overwrite=False) -> None:
+    def does_property_exist(self, prop: str) -> bool:
+        return prop in [
+            line.split("=")[0].strip() for line in self.decrypted_store.split("\n")
+        ]
+
+    def _initialize_backups_dir(self) -> None:
+        """
+        Initialize a directory for the backups.
+        """
+
+        if not os.path.isdir(STORE_BACKUPS_DIR):
+            os.mkdir(STORE_BACKUPS_DIR)
+
+    def _initialize_appdata_dir(self) -> None:
+        """
+        Initialize a directory for the application data.
+        """
+
+        if not os.path.isdir(APPDATA_DIR):
+            os.mkdir(APPDATA_DIR)
+
+    def _initialize_store_file(self) -> None:
+        """
+        Initialize a store file if it doesn't exist.
+        """
+
+        self._initialize_appdata_dir()
+
+        if not os.path.isfile(STORE_FILE):
+            with open(STORE_FILE, "w") as file:
+                file.write(self.encrypt(bytes()))
+
+    def save_store(self, overwrite=False) -> None:
         """
         Save encrypted store on the disk.
         Usage:
             pass a store as a string.
         """
 
-        if not path.isfile(STORE_FILE) and not overwrite:
+        if not os.path.isfile(STORE_FILE) and not overwrite:
             raise StoreIsNotInitializedError("Store isn't initialized!")
 
         write_mode = "w+" if not overwrite else "w"
 
         with open(STORE_FILE, write_mode) as file:
-            file.write(store)
+            file.write(self.encrypt(self.decrypted_store.encode("utf-8")))
 
-    def encrypt(self, key: bytes, source: bytes, iterations: int = ITERATIONS) -> str:
+    def encrypt(self, source: bytes, iterations: int = ITERATIONS) -> str:
         """
         Usage:
             pass a key (password) as a list of bytes,
@@ -67,7 +97,7 @@ class Store:
         """
 
         salt = secrets.token_bytes(16)
-        key = self._derive_key(key, salt, iterations)
+        key = self._derive_key(self.password.encode("utf-8"), salt, iterations)
         return b64e(
             b"%b%b%b"
             % (
@@ -96,12 +126,9 @@ class Store:
         except InvalidToken:
             raise IncorrectPasswordError("Password is incorrect!")
 
-    def get_store(
-        self, password: str = "", _decrypt: bool = False, _path: str = STORE_FILE
-    ) -> str | bytes:
+    def get_store(self, _decrypt: bool = False, _path: str = STORE_FILE) -> str | bytes:
         """
         Usage:
-            pass a password as a string (optional),
             set _decrypt=True if you want to get decrypted store (optional).
         Return:
             decrypted store as a string if the '_decrypt' flag is set,
@@ -111,24 +138,22 @@ class Store:
         with open(_path, "rb") as store:
             content = store.read()
 
-            if _decrypt and password != "":
-                user_password: bytes = password.encode("utf-8")
+            if _decrypt:
+                user_password: bytes = self.password.encode("utf-8")
                 content = self.decrypt(user_password, content).strip("\n").split("\n")
                 content = "\n".join(set([l.strip() for l in content]))
 
             return content
 
-    def get_value(self, name: str, password: str) -> str:
+    def get_value(self, name: str) -> str:
         """
         Usage:
             pass a name of a property as a string (name of a property in the store),
-            pass a password as a string.
         Return:
             a value of the property
         """
 
-        store_content = str(self.get_store(password, _decrypt=True))
-        content = store_content.split("\n")
+        content = self.decrypted_store.split("\n")
         value = None
 
         for line in content:
@@ -144,32 +169,25 @@ class Store:
 
         return value
 
-    def add_property(self, name: str, value: str, password: str) -> None:
+    def add_property(self, name: str, value: str) -> None:
         """
         Add a property to the store.
         Usage:
             pass a name of the property as a string,
             pass a value of the property as a string,
-            pass a password for store decryption and encryption.
         """
 
-        store = str(self.get_store(password, _decrypt=True))
-
-        if self.does_property_exist(store, name):
+        if self.does_property_exist(name):
             raise PropertyAlreadyExistError(f"This property ({name}) already exists!")
 
-        store += f"\n{name} = {value}"
-        store = self.encrypt(password.encode("utf-8"), store.encode("utf-8"))
+        self.decrypted_store += f"\n{name} = {value}"
+        self.save_store()
 
-        self.save_store(store)
-
-    def modify_property(self, name: str, password: str, f) -> None:
-        store = str(self.get_store(password, _decrypt=True))
-
-        if not self.does_property_exist(store, name):
+    def modify_property(self, name: str, f) -> None:
+        if not self.does_property_exist(name):
             raise PropertyDoesNotExistError(f"The property ({name}) does not exist!")
 
-        store = [l for l in store.split("\n")]
+        store = [l for l in self.decrypted_store.split("\n")]
 
         for line in store:
             items = [x.strip() for x in line.split("=")]
@@ -178,16 +196,14 @@ class Store:
                 f(store, line)
 
         store = "\n".join(store)
-        store = self.encrypt(password.encode("utf-8"), store.encode("utf-8"))
+        self.decrypted_store = str(store)
+        self.save_store()
 
-        self.save_store(store)
-
-    def remove_property(self, name: str, password: str) -> None:
+    def remove_property(self, name: str) -> None:
         """
         Remove a set property from the store.
         Usage:
             pass a name of property to remove as a string,
-            pass a password as a string.
         """
 
         def f(s, l):
@@ -197,21 +213,20 @@ class Store:
                 )
             s.pop(s.index(l))
 
-        self.modify_property(name, password, f)
+        self.modify_property(name, f)
 
-    def set_value(self, name: str, value: str, password: str) -> None:
+    def set_value(self, name: str, value: str) -> None:
         """
         Set a value of a property in the store.
         Usage:
             pass a name of a property as a string,
             pass a value of the property as a string,
-            pass a password as a string.
         """
 
         def f(s, l):
             s[s.index(l)] = f"{name} = {value}"
 
-        self.modify_property(name, password, f)
+        self.modify_property(name, f)
 
     def make_store_backup(self) -> None:
         """
@@ -223,49 +238,9 @@ class Store:
         current_date = date.strftime("%d_%m_%Y")
         store_name = STORE_FILE.split("/")[-1]
         backup_name = f"{str(current_date)}_{store_name}"
-        guess_store = self.get_store()
-        store: bytes = guess_store if type(guess_store) is bytes else bytes()
+        store = self.encrypt(self.decrypted_store.encode("utf-8"))
 
-        if not path.isdir(STORE_BACKUPS_DIR):
-            mkdir(STORE_BACKUPS_DIR)
+        self._initialize_backups_dir()
 
         with open(f"{STORE_BACKUPS_DIR}/{backup_name}", "w+") as backup:
-            backup.write(store.decode())
-
-    def initialize_appdata_dir(self) -> None:
-        """
-        Initialize a directory for the app.
-        """
-
-        if not path.isdir(APPDATA_DIR):
-            mkdir(APPDATA_DIR)
-
-    def initialize_store(self, password: str) -> bool:
-        """
-        Initialize a new store.
-        """
-
-        if not path.isdir(APPDATA_DIR):
-            mkdir(APPDATA_DIR)
-
-        if path.isfile(STORE_FILE):
-            answ = input(
-                "The store already had been initialized, overwrite? (y/n): "
-            ).lower()
-            if answ == "n":
-                return False
-            elif answ == "y":
-                self.save_store(
-                    self.encrypt(password.encode("utf-8"), "".encode("utf-8")),
-                    overwrite=True,
-                )
-                return True
-            else:
-                return self.initialize_store(password)
-
-        else:
-            self.save_store(
-                self.encrypt(password.encode("utf-8"), "".encode("utf-8")),
-                overwrite=True,
-            )
-            return True
+            backup.write(store)

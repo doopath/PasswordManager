@@ -2,36 +2,28 @@
 
 import unittest
 import os
-import sys
 import datetime
-from core.store import Store
-from core import constants
-from core.exceptions import PropertyDoesNotExistError
-from core.exceptions import IncorrectPasswordError
+import shutil
+from src.core.store import Store
+from src.core import constants
+from src.core.exceptions import PropertyDoesNotExistError
+from src.core.exceptions import IncorrectPasswordError
 
 
 class StoreTest(unittest.TestCase):
     def setUp(self):
-        self.store = Store()
         self.prop_name = "aProp"
         self.prop_value = "aValue"
         self.password = "aPassword"
-        self.work_dir = sys.path[0]
         self.store_path = constants.STORE_FILE
         self.backup_path = constants.STORE_BACKUPS_DIR
-        self._remove_store_if_exists()
-        self._remove_backup_if_exists()
-        self.store.initialize_store(self.password)
+        self._clear_appdata()
+        self.store = Store(self.password)
 
-    def _remove_if_exists(self, path: str):
-        if os.path.isfile(path):
-            os.remove(path)
-
-    def _remove_store_if_exists(self):
-        self._remove_if_exists(self.store_path)
-
-    def _remove_backup_if_exists(self):
-        self._remove_if_exists(self.backup_path)
+    def _clear_appdata(self):
+        appdata_dir = constants.APPDATA_DIR
+        if os.path.isdir(appdata_dir):
+            shutil.rmtree(appdata_dir)
 
     def _get_file_content(self, path: str) -> str:
         with open(path, "r") as file:
@@ -43,57 +35,68 @@ class StoreTest(unittest.TestCase):
         ), "The 'initialize_store' function should create a store!"
 
     def test_make_store_backup(self):
+        # Be sure you are not running this test at 11:59 PM XD
+        self.store.add_property("aProp", "aValue")
         self.store.make_store_backup()
         date = datetime.date.today().strftime("/%d_%m_%Y_")
         backup_file_path = self.backup_path + date + self.store_path.split("/")[-1]
 
-        is_backup_right = os.path.isdir(self.backup_path)
-        is_backup_right = is_backup_right and os.path.isfile(backup_file_path)
-        is_backup_right = is_backup_right and self._get_file_content(
-            backup_file_path
-        ) == self._get_file_content(self.store_path)
+        backup_store = self.store.decrypt(
+            self.password.encode("utf-8"),
+            self._get_file_content(backup_file_path).encode("utf-8"),
+        )
+        actual_store = self.store.decrypt(
+            self.password.encode("utf-8"),
+            self._get_file_content(self.store_path).encode("utf-8"),
+        )
+
+        is_backup_right = (
+            os.path.isdir(self.backup_path)
+            and os.path.isfile(backup_file_path)
+            and backup_store == actual_store
+        )
         assert (
             is_backup_right
         ), "The 'make_store_backup' function should create a backup of current store!"
 
     def test_add_property_get_value(self):
-        self.store.add_property(self.prop_name, self.prop_value, self.password)
-        value = self.store.get_value(self.prop_name, self.password)
+        self.store.add_property(self.prop_name, self.prop_value)
+        value = self.store.get_value(self.prop_name)
 
         is_value_right = self.prop_value == value
 
         assert is_value_right, "The added property should have correct value!"
 
     def test_set_value(self):
-        self.store.add_property(self.prop_name, self.prop_value, self.password)
+        self.store.add_property(self.prop_name, self.prop_value)
         new_value = "newValue"
-        self.store.set_value(self.prop_name, new_value, self.password)
-        value = self.store.get_value(self.prop_name, self.password)
+        self.store.set_value(self.prop_name, new_value)
+        value = self.store.get_value(self.prop_name)
 
         is_value_right = value == new_value
 
         assert is_value_right, "The set property should have correct value!"
 
     def test_remove_property(self):
-        self.store.add_property(self.prop_name, self.prop_value, self.password)
-        self.store.remove_property(self.prop_name, self.password)
+        self.store.add_property(self.prop_name, self.prop_value)
+        self.store.remove_property(self.prop_name)
 
         is_removed = False
 
         try:
-            self.store.get_value(self.prop_name, self.password)
+            self.store.get_value(self.prop_name)
         except PropertyDoesNotExistError:
             is_removed = True
 
         assert is_removed, "The 'remove_property' function should remove the property!"
 
     def test_get_store(self):
-        store = self.store.get_store(self.password, _decrypt=True)
+        store = self.store.get_store(_decrypt=True)
 
         is_store_correct = store == ""
 
-        self.store.add_property(self.prop_name, self.prop_value, self.password)
-        store = self.store.get_store(self.password, _decrypt=True)
+        self.store.add_property(self.prop_name, self.prop_value)
+        store = self.store.get_store(_decrypt=True)
 
         is_store_correct = (
             is_store_correct and store == f"{self.prop_name} = {self.prop_value}"
@@ -104,36 +107,18 @@ class StoreTest(unittest.TestCase):
     def test_encrypt_decrypt(self):
         key = self.password.encode("utf-8")
         source = self.prop_value
-        encrypted_source = self.store.encrypt(key, source.encode("utf-8")).encode(
-            "utf-8"
-        )
+        encrypted_source = self.store.encrypt(source.encode("utf-8")).encode("utf-8")
         decrypted_source = self.store.decrypt(key, encrypted_source)
 
         is_everything_right = decrypted_source == source
 
         assert is_everything_right, "Decrypted data doesn't equal the initial one!"
 
-    def test_save_get_store(self):
-        self.store.add_property(self.prop_name, self.prop_value, self.password)
-        new_store_value = ""
-        new_store = self.store.encrypt(
-            self.password.encode("utf-8"), new_store_value.encode("utf-8")
-        )
-        self.store.save_store(new_store, overwrite=True)
-        store = self.store.get_store(self.password, _decrypt=True)
-
-        is_store_correct = store == new_store_value
-
-        assert (
-            is_store_correct
-        ), "The 'save_store' functions should change the store value!"
-        " And the 'get_store' one should returns it correctly!"
-
     def test_incorrect_password(self):
         is_everything_right = False
 
         try:
-            self.store.get_store("wrong password", _decrypt=True)
+            self.store = Store("incorrectPassword")
         except IncorrectPasswordError:
             is_everything_right = True
 
