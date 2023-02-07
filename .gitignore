@@ -1,8 +1,13 @@
-backups
+appdata
 build
-store.enc
-venv
-.idea
 dist
+
+venv
+
+.idea
+.fleet
+.vscode
+
 __pycache__
 ./*/__pycache__
+./*/*/__pycache__

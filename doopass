@@ -2,50 +2,29 @@
 """ A python module that helps you to manage your secret data. """
 
 import sys
-from core import option_aliases
+from textual.app import App, ComposeResult
+from textual import events
+from textual.widgets import Welcome, Header
 
-OPTIONS = {
-    "--get-value": option_aliases.get_value,
-    "--get-gh-token": option_aliases.get_gh_token,
-    "--set-value": option_aliases.set_value,
-    "--add-property": option_aliases.add_property,
-    "--remove-property": option_aliases.remove_property,
-    "--make-backup": option_aliases.make_store_backup,
-    "--show-store": option_aliases.show_store,
-    "--show-keys": option_aliases.show_store_keys,
-    "--help": option_aliases.show_help_list,
-    "--init": option_aliases.initialize_store,
-    "--version": option_aliases.show_version,
 
-    "-gv": option_aliases.get_value,
-    "-ggt": option_aliases.get_gh_token,
-    "-sv": option_aliases.set_value,
-    "-ap": option_aliases.add_property,
-    "-rp": option_aliases.remove_property,
-    "-mb": option_aliases.make_store_backup,
-    "-ss": option_aliases.show_store,
-    "-sk": option_aliases.show_store_keys,
-    "-h": option_aliases.show_help_list,
-    "-i": option_aliases.initialize_store,
-    "-v": option_aliases.show_version,
-}
+class Doopass(App):
+    CSS_PATH = "assets/styles.css"
+
+    def on_mount(self) -> None:
+        self.screen.styles.background = "black"
+
+    def compose(self) -> ComposeResult:
+        yield Header(show_clock=True, id='header')
+        yield Welcome()
+
+    def on_key(self, event: events.Key) -> None:
+        self.exit()
 
 
 def main():
-    try:
-        args = sys.argv[1:]
-
-        if len(args) == 0:
-            option = "--help"
-        else:
-            option = args[0]
-
-        OPTIONS[option](args[1:])
-
-        return 0
-    except Exception as error:
-        print(f"\nThrown an exception: {error}")
-        return 1
+    app = Doopass()
+    app.run()
 
 
-(lambda: main() if __name__ == "__main__" else None)()
+if __name__ == "__main__":
+    sys.exit(main())
