@@ -1,1 +1,0 @@
-python "C:\Program Files\PasswordManager\doopass.py" %*
