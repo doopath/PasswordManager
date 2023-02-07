@@ -1,2 +1,12 @@
-pyperclip>=1.8.2
-cryptography>=3.4.8
+cffi==1.15.1
+cryptography==39.0.0
+importlib-metadata==4.13.0
+markdown-it-py==2.1.0
+mdurl==0.1.2
+nanoid==2.0.0
+pycparser==2.21
+Pygments==2.14.0
+pyperclip==1.8.2
+rich==13.3.1
+textual==0.10.1
+zipp==3.12.1
