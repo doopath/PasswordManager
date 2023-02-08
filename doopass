@@ -22,7 +22,8 @@ class Doopass(App):
 
 
 def main():
-    pass
+    app = Doopass()
+    app.run()
 
 
 if __name__ == "__main__":
