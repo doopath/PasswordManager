@@ -2,7 +2,6 @@
 """ A python module that helps you to manage your secret data. """
 
 import sys
-from src.core.store import Store
 from textual.app import App, ComposeResult
 from textual import events
 from textual.widgets import Welcome, Header
