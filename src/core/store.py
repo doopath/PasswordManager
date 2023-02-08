@@ -244,3 +244,18 @@ class Store:
 
         with open(f"{STORE_BACKUPS_DIR}/{backup_name}", "w+") as backup:
             backup.write(store)
+
+
+def try_initialize_store(password: str) -> Store | None:
+    """
+    Initialize a store.
+    Usage:
+        pass a password as a string.
+    Return:
+        a store object.
+    """
+
+    try:
+        return Store(password)
+    except IncorrectPasswordError:
+        return None

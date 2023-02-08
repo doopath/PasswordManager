@@ -4,21 +4,55 @@
 import sys
 from textual.app import App, ComposeResult
 from textual import events
-from textual.widgets import Welcome, Header
+from textual.widgets import Welcome, Header, Label, Button, Footer
+from textual.screen import Screen
+from src.core import store
+from src.core.components.login_page import LoginPage
+from src.core.components.incorrect_password_error import IncorrectPasswordError
+
+
+class ErrorScreen(Screen):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.styles.background = "black"
+
+    def compose(self) -> ComposeResult:
+        yield IncorrectPasswordError()
+
+    def quit_error_screen(self) -> None:
+        self.app.pop_screen()
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        if event.button.id == "incorrect_password_error_button":
+            self.quit_error_screen()
 
 
 class Doopass(App):
     CSS_PATH = "assets/styles.css"
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.store = None
 
     def on_mount(self) -> None:
         self.screen.styles.background = "black"
 
     def compose(self) -> ComposeResult:
         yield Header(show_clock=True, id="header")
-        yield Welcome()
+        yield LoginPage(self.set_store).create()
 
-    def on_key(self, event: events.Key) -> None:
-        self.exit()
+    def show_incorrect_password_error(self) -> None:
+        error_screen = ErrorScreen()
+        self.install_screen(error_screen)
+        self.push_screen(error_screen)
+
+    def set_store(self, password: str) -> None:
+        self.store = store.try_initialize_store(password)
+
+        if self.store:
+            pass
+        else:
+            self.show_incorrect_password_error()
 
 
 def main():

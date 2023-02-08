@@ -2,3 +2,56 @@
     background: black;
     color: white;
 }
+
+#login_grid {
+    grid-size: 1 3;
+    grid-rows: 1fr 1fr 1fr;
+    width: 100%;
+}
+
+#login_super_container {
+    grid-size: 3 1;
+    grid-columns: 1fr 6fr 1fr;
+    height: 100%;
+}
+
+#login_container {
+    width: 100%;
+    height: 100%;
+}
+
+#password_input {
+    width: 100%;
+    height: 3;
+    content-align: center middle;
+    color: #e9ecef;
+    background: #0e1012;
+}
+
+#login_button {
+    width: 100%;
+    margin: 1 1 0 1;
+    height: 3;
+    background: #e9ecef;
+    content-align: center middle;
+    color: #343a40;
+}
+
+#login_button:focus {
+    background: #343a40;
+    color: #e9ecef;
+}
+
+#password_input:focus {
+    border: tall #e9ecef;
+}
+
+#incorrect_password_error {
+    height: 100%;
+}
+
+#incorrect_password_error_label {
+}
+
+#incorrect_password_error_button {
+}
