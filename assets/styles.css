@@ -46,12 +46,45 @@
     border: tall #e9ecef;
 }
 
-#incorrect_password_error {
+#incorrect_password_message_container {
+    width: 100%;
     height: 100%;
 }
 
-#incorrect_password_error_label {
+#incorrect_password_message {
+    width: 50%;
+    height: 100%;
+    align: center middle;
+    content-align: center middle;
 }
 
-#incorrect_password_error_button {
+#incorrect_password_message_before {
+    width: 25%;
+    height: 100%;
+    margin: 10 0;
+}
+
+#incorrect_password_message_after {
+    width: 25%;
+    height: 100%;
+    margin: 10 0;
+}
+
+#incorrect_password_message_label {
+    color: #e9ecef;
+    width: 100%;
+    text-align: center;
+}
+
+#incorrect_password_message_button {
+    margin: 2 0 0 0;
+    width: 100%;
+    background: #e9ecef;
+    content-align: center middle;
+    color: #343a40;
+}
+
+#incorrect_password_message_button:focus {
+    background: #343a40;
+    color: #e9ecef;
 }

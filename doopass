@@ -3,28 +3,10 @@
 
 import sys
 from textual.app import App, ComposeResult
-from textual import events
-from textual.widgets import Welcome, Header, Label, Button, Footer
-from textual.screen import Screen
+from textual.widgets import Header
 from src.core import store
 from src.core.components.login_page import LoginPage
-from src.core.components.incorrect_password_error import IncorrectPasswordError
-
-
-class ErrorScreen(Screen):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.styles.background = "black"
-
-    def compose(self) -> ComposeResult:
-        yield IncorrectPasswordError()
-
-    def quit_error_screen(self) -> None:
-        self.app.pop_screen()
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "incorrect_password_error_button":
-            self.quit_error_screen()
+from src.core.screens.incorrect_password_screen import IncorrectPasswordScreen
 
 
 class Doopass(App):
@@ -41,8 +23,8 @@ class Doopass(App):
         yield Header(show_clock=True, id="header")
         yield LoginPage(self.set_store).create()
 
-    def show_incorrect_password_error(self) -> None:
-        error_screen = ErrorScreen()
+    def show_incorrect_password_message(self) -> None:
+        error_screen = IncorrectPasswordScreen()
         self.install_screen(error_screen)
         self.push_screen(error_screen)
 
@@ -50,14 +32,21 @@ class Doopass(App):
         self.store = store.try_initialize_store(password)
 
         if self.store:
-            pass
+            # TODO: Create a store-handle page that will allow the user to manage the store.
+            # It will be shown if the store is initialized successfully. After that the user is logged in
+            # and the store object is loaded into the app.
+            # Notice that if the store is not initialized yet (before the user tried to log in) the store will
+            # be created and loaded (but it's empty).
+            ...
         else:
-            self.show_incorrect_password_error()
+            self.show_incorrect_password_message()
 
 
-def main():
+def main() -> int:
     app = Doopass()
     app.run()
+
+    return 0
 
 
 if __name__ == "__main__":
