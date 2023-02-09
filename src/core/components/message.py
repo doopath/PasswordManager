@@ -4,13 +4,15 @@ from textual.app import ComposeResult
 from textual.widgets import Label, Button
 
 
-class IncorrectPasswordMessage(Vertical):
+class Message(Vertical):
     def __init__(self, *args, **kwargs):
+        self.text = kwargs.pop("text")
+
         if not "id" in kwargs:
-            kwargs["id"] = "incorrect_password_message"
+            kwargs["id"] = "message"
 
         super().__init__(*args, **kwargs)
 
     def compose(self) -> ComposeResult:
-        yield Label("Incorrect password!", id="incorrect_password_message_label")
-        yield Button(label="OK", id="incorrect_password_message_button")
+        yield Label(self.text, id="message_label")
+        yield Button(label="OK", id="message_button", classes="button")

@@ -6,7 +6,8 @@ from textual.app import App, ComposeResult
 from textual.widgets import Header
 from src.core import store
 from src.core.components.login_page import LoginPage
-from src.core.screens.incorrect_password_screen import IncorrectPasswordScreen
+from src.core.exceptions import StoreIsNotInitializedError
+from src.core.screens.message_screen import MessageScreen
 
 
 class Doopass(App):
@@ -24,12 +25,33 @@ class Doopass(App):
         yield LoginPage(self.set_store).create()
 
     def show_incorrect_password_message(self) -> None:
-        error_screen = IncorrectPasswordScreen()
-        self.install_screen(error_screen)
-        self.push_screen(error_screen)
+        callback = lambda: self.pop_screen()
+        message_screen = MessageScreen(callback, "Incorrect password")
+        self.install_screen(message_screen)
+        self.push_screen(message_screen)
+
+    def show_sign_up_screen(self) -> None:
+        self.pop_screen()
+        # TODO: Create a sign up screen and show it. The sign up screen will
+        # validate a password, call self.set_store and pop screen.
+
+        # signupscreen = SignUpScreen()
+        # self.install_screen(signupscreen)
+        # self.push_screen(signupscreen)
+
+    def show_store_is_not_initialized_message(self) -> None:
+        message_screen = MessageScreen(
+            self.show_sign_up_screen, "Store is not initialized. Please sign up."
+        )
+        self.install_screen(message_screen)
+        self.push_screen(message_screen)
 
     def set_store(self, password: str) -> None:
-        self.store = store.try_initialize_store(password)
+        try:
+            self.store = store.try_initialize_existing_store(password)
+        except StoreIsNotInitializedError:
+            self.show_store_is_not_initialized_message()
+            return
 
         if self.store:
             # TODO: Create a store-handle page that will allow the user to manage the store.
@@ -37,6 +59,7 @@ class Doopass(App):
             # and the store object is loaded into the app.
             # Notice that if the store is not initialized yet (before the user tried to log in) the store will
             # be created and loaded (but it's empty).
+            # It's necessary to create a sign up screen that's shown if the store is not initialized yet.
             ...
         else:
             self.show_incorrect_password_message()

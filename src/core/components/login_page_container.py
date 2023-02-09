@@ -11,10 +11,7 @@ class LoginPageContainer(Vertical):
 
     def compose(self) -> ComposeResult:
         yield Input(placeholder="Password for the store", id="password_input")
-        yield Button(
-            label="Login",
-            id="login_button",
-        )
+        yield Button(label="Login", id="login_button", classes="button")
 
     def on_button_pressed(self, event: Button.Pressed):
         if event.button.id == "login_button":

@@ -246,7 +246,7 @@ class Store:
             backup.write(store)
 
 
-def try_initialize_store(password: str) -> Store | None:
+def try_initialize_existing_store(password: str) -> Store | None:
     """
     Initialize a store.
     Usage:
@@ -256,6 +256,9 @@ def try_initialize_store(password: str) -> Store | None:
     """
 
     try:
-        return Store(password)
+        if os.path.isdir(APPDATA_DIR) and os.path.isfile(STORE_FILE):
+            return Store(password)
+        else:
+            raise StoreIsNotInitializedError("Store isn't initialized!")
     except IncorrectPasswordError:
         return None
