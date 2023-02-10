@@ -137,13 +137,18 @@ class Store:
 
         with open(_path, "rb") as store:
             content = store.read()
+            decrypted_content = None
+            result = None
 
             if _decrypt:
                 user_password: bytes = self.password.encode("utf-8")
-                content = self.decrypt(user_password, content).strip("\n").split("\n")
-                content = "\n".join(set([l.strip() for l in content]))
+                decrypted_content = (
+                    self.decrypt(user_password, content).strip("\n").split("\n")
+                )
 
-            return content
+                result = "\n".join(set([l.strip() for l in decrypted_content]))
+
+            return result if result is not None else content
 
     def get_value(self, name: str) -> str:
         """
@@ -195,8 +200,7 @@ class Store:
             if items[0] == name:
                 f(store, line)
 
-        store = "\n".join(store)
-        self.decrypted_store = str(store)
+        self.decrypted_store = "\n".join(store)
         self.save_store()
 
     def remove_property(self, name: str) -> None:

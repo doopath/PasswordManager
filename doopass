@@ -2,15 +2,8 @@
 """ A python module that helps you to manage your secret data. """
 
 import sys
-from typing import Any, Callable
-from textual.app import App, ComposeResult
-from textual.widgets import Header
-from src.core import store
-from src.core.components.login_page import LoginPage
-from src.core.exceptions import StoreIsNotInitializedError
-from src.core.screens.message_screen import MessageScreen
-from src.core.screens.sign_up_screen import SignUpScreen
-from src.core.password_validation import PasswordValidator
+from src.core.app import App
+from src.core.screens.main_screen import MainScreen
 
 
 class Doopass(App):
@@ -18,72 +11,13 @@ class Doopass(App):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.store = None
 
     def on_mount(self) -> None:
+        main_screen = MainScreen(self)
+
+        self.install_screen(main_screen)
+        self.push_screen(main_screen)
         self.screen.styles.background = "black"
-
-    def compose(self) -> ComposeResult:
-        yield Header(show_clock=True, id="header")
-        yield LoginPage(self.set_store).create()
-
-    def show_message(self, callback: Callable[[], Any], text: str) -> None:
-        message_screen = MessageScreen(callback, text)
-        self.install_screen(message_screen)
-        self.push_screen(message_screen)
-
-    def show_incorrect_password_message(self) -> None:
-        self.show_message(self.pop_screen, "Incorrect password!")
-
-    def show_store_is_not_initialized_message(self) -> None:
-        self.show_message(
-            self.show_sign_up_screen, "Store is not initialized. Please sign up."
-        )
-
-    def show_store_handle_screen(self) -> None:
-        pass
-
-    def show_store_initialized_message(self) -> None:
-        def callback() -> None:
-            self.pop_screen()
-            self.show_store_handle_screen()
-
-        self.show_message(callback, "You successfully initialized a store!")
-
-    def show_sign_up_screen(self) -> None:
-        def callback(password: str) -> None:
-            val = PasswordValidator(password).validate()
-
-            if not val[0]:
-                self.show_message(self.show_sign_up_screen, val[1])
-                return
-
-            self.store = store.try_initialize_store(password)
-            self.pop_screen()
-            self.show_store_initialized_message()
-
-        signup_screen = SignUpScreen(callback)
-        self.pop_screen()
-        self.install_screen(signup_screen)
-        self.push_screen(signup_screen)
-
-    def set_store(self, password: str) -> None:
-        try:
-            self.store = store.try_initialize_existing_store(password)
-        except StoreIsNotInitializedError:
-            self.show_store_is_not_initialized_message()
-            return
-
-        if self.store:
-            # TODO: Create a store-handle page that will allow the user to manage the store.
-            # It will be shown if the store is initialized successfully. After that the user is logged in
-            # and the store object is loaded into the app.
-            # Notice that if the store is not initialized yet (before the user tried to log in) the store will
-            # be created and loaded (but it's empty).
-            # It's necessary to create a sign up screen that's shown if the store is not initialized yet.
-            ...
-        else:
-            self.show_incorrect_password_message()
 
 
 def main() -> int:

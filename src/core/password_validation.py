@@ -21,6 +21,12 @@ class PasswordValidator:
         )
 
     def validate(self) -> Tuple[bool, str]:
+        """
+        Returns:
+            Tuple of (bool, str). If bool is True, then the password is valid.
+            The str is the error message (or "Everything is fine!" if the password is valid).
+
+        """
         validations = [
             self._is_not_password_too_small(),
             self._does_password_not_start_with_space(),

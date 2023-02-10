@@ -98,9 +98,7 @@ class StoreTest(unittest.TestCase):
         self.store.add_property(self.prop_name, self.prop_value)
         store = self.store.get_store(_decrypt=True)
 
-        is_store_correct = (
-            is_store_correct and store == f"{self.prop_name} = {self.prop_value}"
-        )
+        is_store_correct &= store == f"{self.prop_name} = {self.prop_value}"
 
         assert is_store_correct, "The gotten store isn't correct!"
 
@@ -109,7 +107,6 @@ class StoreTest(unittest.TestCase):
         source = self.prop_value
         encrypted_source = self.store.encrypt(source.encode("utf-8")).encode("utf-8")
         decrypted_source = self.store.decrypt(key, encrypted_source)
-
         is_everything_right = decrypted_source == source
 
         assert is_everything_right, "Decrypted data doesn't equal the initial one!"
