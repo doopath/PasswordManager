@@ -1,32 +1,24 @@
-from ..exceptions import StoreIsNotInitializedError
-from ..app import App
+from typing import Any, Callable
+
+
 from .. import store
+from ..exceptions import StoreIsNotInitializedError
 from ..password_validation import PasswordValidator
-from .sign_up_screen import SignUpScreen
 from .message_screen import MessageScreen
-from ..components.login_page import LoginPage
-from typing import Callable, Any
-from textual.screen import Screen 
-from textual.widgets import Header
-from textual.app import ComposeResult
+from .screen import Screen
+from .main_menu_screen import MainMenuScreen
+from .sign_up_screen import SignUpScreen
 
 
-class _Screen(Screen):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-        self.app: App
-
-
-class MainScreen(_Screen):
+class MainScreen(Screen):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
     def on_mount(self) -> None:
+        screen = MainMenuScreen(set_store=self.set_store, app=self.app)
         self.screen.styles.background = "black"
-
-    def compose(self) -> ComposeResult:
-        yield Header(show_clock=True, id="header")
-        yield LoginPage(self.set_store).create()
+        self.app.install_screen(screen)
+        self.app.push_screen(screen)
 
     def show_message(self, callback: Callable[[], Any], text: str) -> None:
         message_screen = MessageScreen(callback, text)
@@ -77,5 +69,6 @@ class MainScreen(_Screen):
 
         if self.app.store:
             ...
+            # show StoreHandleScreen
         else:
             self.show_incorrect_password_message()
