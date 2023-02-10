@@ -10,13 +10,21 @@ class LoginPageContainer(Vertical):
         self.button_label = (
             kwargs.pop("button_label", "button label")
             if "button_label" in kwargs
-            else "Login"
+            else "Log in"
         )
         super().__init__(*args, **kwargs)
 
     def compose(self) -> ComposeResult:
-        yield Input(placeholder="Password for the store", id="password_input")
-        yield Button(label=self.button_label, id="login_button", classes="button")
+        yield Input(
+            placeholder="Password for the store",
+            id="password_input",
+            classes="input_form_input_field",
+        )
+        yield Button(
+            label=self.button_label,
+            id="login_button",
+            classes="button input_form_button",
+        )
 
     def on_button_pressed(self, event: Button.Pressed):
         if event.button.id == "login_button":

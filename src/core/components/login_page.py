@@ -15,10 +15,16 @@ class LoginPage:
             Static(),
             Grid(
                 Static(),
-                LoginPageContainer(set_store=self.set_store, id="login_container"),
+                LoginPageContainer(
+                    set_store=self.set_store,
+                    id="login_container",
+                    classes="input_form_container",
+                ),
                 Static(),
                 id="login_super_container",
+                classes="input_form_super_container",
             ),
             Static(),
             id="login_grid",
+            classes="input_form_grid",
         )

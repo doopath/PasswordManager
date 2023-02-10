@@ -13,25 +13,32 @@
     color: white;
 }
 
-#login_grid {
+.input_form_grid {
     grid-size: 1 3;
     grid-rows: 1fr 1fr 1fr;
     width: 100%;
 }
 
-#login_super_container {
+.input_form_super_container {
     grid-size: 3 1;
     grid-columns: 1fr 6fr 1fr;
     height: 100%;
 }
 
-#login_container {
+.input_form_container {
     width: 100%;
     height: 100%;
     align: center middle;
 }
 
-#password_input {
+.input_form_button {
+    width: 100%;
+    margin: 1 1 0 1;
+    height: 3;
+    content-align: center middle;
+}
+
+.input_form_input_field {
     width: 100%;
     height: 3;
     content-align: center middle;
@@ -39,14 +46,7 @@
     background: #0e1012;
 }
 
-#login_button {
-    width: 100%;
-    margin: 1 1 0 1;
-    height: 3;
-    content-align: center middle;
-}
-
-#password_input:focus {
+.input_form_input_field:focus {
     border: tall #e9ecef;
 }
 

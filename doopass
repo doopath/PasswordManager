@@ -53,6 +53,7 @@ class Doopass(App):
     def show_sign_up_screen(self) -> None:
         def callback(password: str) -> None:
             val = PasswordValidator(password).validate()
+
             if not val[0]:
                 self.show_message(self.show_sign_up_screen, val[1])
                 return
@@ -61,10 +62,10 @@ class Doopass(App):
             self.pop_screen()
             self.show_store_initialized_message()
 
-        signupscreen = SignUpScreen(callback)
+        signup_screen = SignUpScreen(callback)
         self.pop_screen()
-        self.install_screen(signupscreen)
-        self.push_screen(signupscreen)
+        self.install_screen(signup_screen)
+        self.push_screen(signup_screen)
 
     def set_store(self, password: str) -> None:
         try:

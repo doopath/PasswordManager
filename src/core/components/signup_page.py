@@ -11,4 +11,18 @@ class SignUpPage:
         self.set_store = set_store
 
     def create(self) -> Widget:
-        return LoginPageContainer(set_store=self.set_store)
+        return Grid(
+            Static(),
+            Grid(
+                Static(),
+                LoginPageContainer(
+                    set_store=self.set_store,
+                    button_label="Sign up",
+                    classes="input_form_container",
+                ),
+                Static(),
+                classes="input_form_super_container",
+            ),
+            Static(),
+            classes="input_form_grid",
+        )
