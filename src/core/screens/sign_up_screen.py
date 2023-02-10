@@ -7,11 +7,11 @@ from ..components.signup_page import SignUpPage
 
 
 class SignUpScreen(Screen):
-    def __init__(self, callback: Callable[[str], None], *args, **kwargs) -> None:
+    def __init__(self, set_store: Callable[[str], None], *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.styles.background = "black"
-        self.callback = callback
+        self.set_store = set_store
 
     def compose(self) -> ComposeResult:
         yield Header(show_clock=True, id="header")
-        yield SignUpPage(set_store=self.callback).create()
+        yield SignUpPage(set_store=self.set_store).create()

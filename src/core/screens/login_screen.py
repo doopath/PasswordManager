@@ -1,6 +1,8 @@
 from typing import Callable
+
 from textual.app import ComposeResult
 from textual.widgets import Header
+
 from ..app import App
 from ..components.login_page import LoginPage
 from .screen import Screen

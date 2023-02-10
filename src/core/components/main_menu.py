@@ -1,7 +1,8 @@
-from typing import Any, Dict, List, Callable, Tuple
+from typing import Any, Callable, Dict, List, Tuple
+
+from textual.app import ComposeResult
 from textual.containers import Vertical
 from textual.widgets import Button
-from textual.app import ComposeResult
 
 
 class MainMenu(Vertical):
@@ -31,7 +32,7 @@ class MainMenu(Vertical):
 
     def compose(self) -> ComposeResult:
         for button in self.numbered_buttons:
-            yield Button(button[0], classes="main_menu_button", id=button[2])
+            yield Button(button[0], classes="main_menu_button button", id=button[2])
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         try:

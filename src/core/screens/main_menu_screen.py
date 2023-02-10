@@ -1,10 +1,13 @@
-from typing import Callable
+from typing import Any, Callable
+
+from textual.app import ComposeResult
+from textual.widgets import Header
+
 from ..app import App
+from ..components.main_menu import MainMenu
 from .login_screen import LoginScreen
 from .screen import Screen
-from ..components.main_menu import MainMenu
-from textual.widgets import Header
-from textual.app import ComposeResult
+from .sign_up_screen import SignUpScreen
 
 
 class MainMenuScreen(Screen):
@@ -17,6 +20,14 @@ class MainMenuScreen(Screen):
     def on_mount(self) -> None:
         self.screen.styles.background = "black"
 
+    # type: ignore
+    def _show_screen_wrapper(self, f: Callable[[], None]) -> Callable[[], None]:
+        def wrapper() -> None:
+            self.app.pop_screen()
+            f()
+
+        return wrapper
+
     def _show_login_screen(self) -> None:
         screen = LoginScreen(set_store=self.set_store, app=self.app)
         self.app.install_screen(screen)
@@ -26,15 +37,17 @@ class MainMenuScreen(Screen):
         pass
 
     def _show_sign_up_screen(self) -> None:
-        pass
+        screen = SignUpScreen(set_store=self.set_store)
+        self.app.install_screen(screen)
+        self.app.push_screen(screen)
 
     def compose(self) -> ComposeResult:
         yield Header(show_clock=True, id="header")
         yield MainMenu(
             [
-                ("Login", self._show_login_screen),
-                ("Backup", self._show_backup_screen),
-                ("Sign up", self._show_sign_up_screen),
+                ("Log in", self._show_screen_wrapper(self._show_login_screen)),
+                ("Backup", self._show_screen_wrapper(self._show_backup_screen)),
+                ("Sign up", self._show_screen_wrapper(self._show_sign_up_screen)),
                 ("Exit", self.app.exit),
             ]
         )

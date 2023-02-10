@@ -85,3 +85,18 @@
     width: 100%;
     content-align: center middle;
 }
+
+.main_menu {
+    width: 100%;
+    height: 100%;
+    margin: 5;
+    align: center middle;
+    content-align: center middle;
+}
+
+.main_menu_button {
+    width: 100%;
+    margin: 1 0 0 0;
+    align: center middle;
+    content-align: center middle;
+}

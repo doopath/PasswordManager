@@ -1,12 +1,11 @@
 from typing import Any, Callable
 
-
 from .. import store
 from ..exceptions import StoreIsNotInitializedError
 from ..password_validation import PasswordValidator
+from .main_menu_screen import MainMenuScreen
 from .message_screen import MessageScreen
 from .screen import Screen
-from .main_menu_screen import MainMenuScreen
 from .sign_up_screen import SignUpScreen
 
 
