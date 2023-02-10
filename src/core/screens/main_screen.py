@@ -6,18 +6,18 @@ from .sign_up_screen import SignUpScreen
 from .message_screen import MessageScreen
 from ..components.login_page import LoginPage
 from typing import Callable, Any
-from textual import screen
+from textual.screen import Screen 
 from textual.widgets import Header
 from textual.app import ComposeResult
 
 
-class Screen(screen.Screen):
+class _Screen(Screen):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.app: App
 
 
-class MainScreen(Screen):
+class MainScreen(_Screen):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
@@ -70,12 +70,12 @@ class MainScreen(Screen):
 
     def set_store(self, password: str) -> None:
         try:
-            self.store = store.try_initialize_existing_store(password)
+            self.app.store = store.try_initialize_existing_store(password)
         except StoreIsNotInitializedError:
             self.show_store_is_not_initialized_message()
             return
 
-        if self.store:
+        if self.app.store:
             ...
         else:
             self.show_incorrect_password_message()

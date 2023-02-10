@@ -262,3 +262,4 @@ def try_initialize_existing_store(password: str) -> Store | None:
         return try_initialize_store(password)
     else:
         raise StoreIsNotInitializedError("Store isn't initialized!")
+
