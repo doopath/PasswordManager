@@ -5,6 +5,7 @@ from ..exceptions import StoreIsNotInitializedError
 from ..password_validation import PasswordValidator
 from .main_menu_screen import MainMenuScreen
 from .message_screen import MessageScreen
+from .store_handle_screen import StoreHandleScreen
 from .screen import Screen
 from .sign_up_screen import SignUpScreen
 
@@ -19,40 +20,45 @@ class MainScreen(Screen):
         self.app.install_screen(screen)
         self.app.push_screen(screen)
 
-    def show_message(self, callback: Callable[[], Any], text: str) -> None:
+    def _show_message(self, callback: Callable[[], Any], text: str) -> None:
         message_screen = MessageScreen(callback, text)
         self.app.install_screen(message_screen)
         self.app.push_screen(message_screen)
 
-    def show_incorrect_password_message(self) -> None:
-        self.show_message(self.app.pop_screen, "Incorrect password!")
+    def _show_incorrect_password_message(self) -> None:
+        self._show_message(self.app.pop_screen, "Incorrect password!")
 
-    def show_store_is_not_initialized_message(self) -> None:
-        self.show_message(
-            self.show_sign_up_screen, "Store is not initialized. Please sign up."
+    def _show_store_is_not_initialized_message(self) -> None:
+        self._show_message(
+            self._show_sign_up_screen, "Store is not initialized. Please sign up."
         )
 
-    def show_store_handle_screen(self) -> None:
-        pass
+    def _show_store_handle_screen(self) -> None:
+        if self.app.store:
+            screen = StoreHandleScreen()
+            self.app.install_screen(screen)
+            self.app.push_screen(screen)
+        else:
+            raise StoreIsNotInitializedError("Store is not initialized!")
 
-    def show_store_initialized_message(self) -> None:
+    def _show_store_initialized_message(self) -> None:
         def callback() -> None:
             self.app.pop_screen()
-            self.show_store_handle_screen()
+            self._show_store_handle_screen()
 
-        self.show_message(callback, "You successfully initialized a store!")
+        self._show_message(callback, "You successfully initialized a store!")
 
-    def show_sign_up_screen(self) -> None:
+    def _show_sign_up_screen(self) -> None:
         def callback(password: str) -> None:
             val = PasswordValidator(password).validate()
 
             if not val[0]:
-                self.show_message(self.show_sign_up_screen, val[1])
+                self._show_message(self._show_sign_up_screen, val[1])
                 return
 
             self.app.store = store.try_initialize_store(password)
             self.app.pop_screen()
-            self.show_store_initialized_message()
+            self._show_store_initialized_message()
 
         signup_screen = SignUpScreen(callback)
         self.app.pop_screen()
@@ -63,11 +69,10 @@ class MainScreen(Screen):
         try:
             self.app.store = store.try_initialize_existing_store(password)
         except StoreIsNotInitializedError:
-            self.show_store_is_not_initialized_message()
+            self._show_store_is_not_initialized_message()
             return
 
         if self.app.store:
-            ...
-            # show StoreHandleScreen
+            self._show_store_handle_screen()
         else:
-            self.show_incorrect_password_message()
+            self._show_incorrect_password_message()

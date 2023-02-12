@@ -1,4 +1,3 @@
-#! /usr/bin/env python3
 """ A python module that helps you to manage your secret data. """
 
 import sys
