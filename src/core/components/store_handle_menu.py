@@ -20,7 +20,7 @@ class StoreHandleMenu(Vertical):
 
     def compose(self) -> ComposeResult:
         yield Label("Your keys", classes="store_handle_title")
-        for key in self.get_keys():
+        for key in sorted(self.get_keys()):
             yield Grid(
                 Grid(
                     Label(key, classes="store_handle_item_label"),
