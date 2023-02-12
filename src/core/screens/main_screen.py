@@ -4,11 +4,10 @@ from .. import store
 from ..exceptions import StoreIsNotInitializedError
 from ..password_validation import PasswordValidator
 from .main_menu_screen import MainMenuScreen
-from .store_handle_screen import StoreHandleScreen
 from .message_screen import MessageScreen
-from .store_handle_screen import StoreHandleScreen
 from .screen import Screen
 from .sign_up_screen import SignUpScreen
+from .store_handle_screen import StoreHandleScreen
 
 
 class MainScreen(Screen):

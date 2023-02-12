@@ -2,20 +2,11 @@ from typing import Callable
 from textual.app import ComposeResult
 from textual.containers import Grid, Vertical
 from textual.widgets import Button, Label, Input
-from .screen import Screen
+from textual.widget import Widget
 
 
-class StorePairUpdateScreen(Screen):
-    def __init__(
-        self,
-        callback: Callable[[str, str], None],
-        key: str,
-        value: str,
-        button_text: str = "Update",
-        *args,
-        **kwargs
-    ) -> None:
-        self.callback = callback
+class StorePairHandlePage:
+    def __init__(self, key: str, value: str, button_text: str) -> None:
         self.key = key
         self.password_value = value
         self.key_input_field_id = "store_pair_update_key_input"
@@ -23,10 +14,9 @@ class StorePairUpdateScreen(Screen):
         self.update_button_id = "store_pair_update_button"
         self.back_button_id = "store_pair_back_button"
         self.button_text = button_text
-        super().__init__(*args, **kwargs)
 
-    def compose(self) -> ComposeResult:
-        yield Vertical(
+    def create(self) -> Widget:
+        return Vertical(
             Grid(
                 Grid(
                     Label("Key:", classes="store_pair_update_label"),
@@ -66,15 +56,3 @@ class StorePairUpdateScreen(Screen):
             ),
             classes="store_pair_update_container",
         )
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == self.update_button_id:
-            key: str = self.get_widget_by_id(self.key_input_field_id).__getattribute__(
-                "value"
-            )
-            password: str = self.get_widget_by_id(
-                self.password_input_field_id
-            ).__getattribute__("value")
-            self.callback(key, password)
-        elif event.button.id == self.back_button_id:
-            self.callback(self.key, self.password_value)
