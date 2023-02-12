@@ -1,7 +1,8 @@
 """ A python module that helps you to manage your secret data. """
-
+import os
 import sys
 from src.core.app import App
+from src.core import constants
 from src.core.screens.main_screen import MainScreen
 from src.core.screens.screen import Screen
 
@@ -11,6 +12,7 @@ class Doopass(App):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        constants.update(os.path.dirname(os.path.abspath(__file__)))
 
     def on_mount(self) -> None:
         main_screen = MainScreen(self)

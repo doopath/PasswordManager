@@ -9,7 +9,7 @@ from cryptography.fernet import Fernet, InvalidToken
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from .constants import STORE_BACKUPS_DIR, STORE_FILE, APPDATA_DIR
+from . import constants
 from .exceptions import (
     IncorrectPasswordError,
     PropertyAlreadyExistError,
@@ -50,16 +50,16 @@ class Store:
         Initialize a directory for the backups.
         """
 
-        if not os.path.isdir(STORE_BACKUPS_DIR):
-            os.mkdir(STORE_BACKUPS_DIR)
+        if not os.path.isdir(constants.STORE_BACKUPS_DIR):
+            os.mkdir(constants.STORE_BACKUPS_DIR)
 
     def _initialize_appdata_dir(self) -> None:
         """
         Initialize a directory for the application data.
         """
 
-        if not os.path.isdir(APPDATA_DIR):
-            os.mkdir(APPDATA_DIR)
+        if not os.path.isdir(constants.APPDATA_DIR):
+            os.mkdir(constants.APPDATA_DIR)
 
     def _initialize_store_file(self) -> None:
         """
@@ -69,7 +69,7 @@ class Store:
         self._initialize_appdata_dir()
 
         if not does_store_file_exist():
-            with open(STORE_FILE, "w") as file:
+            with open(constants.STORE_FILE, "w") as file:
                 file.write(self.encrypt(bytes()))
 
     def save_store(self, overwrite=False) -> None:
@@ -79,12 +79,12 @@ class Store:
             pass a store as a string.
         """
 
-        if not os.path.isfile(STORE_FILE) and not overwrite:
+        if not os.path.isfile(constants.STORE_FILE) and not overwrite:
             raise StoreIsNotInitializedError("Store isn't initialized!")
 
         write_mode = "w+" if not overwrite else "w"
 
-        with open(STORE_FILE, write_mode) as file:
+        with open(constants.STORE_FILE, write_mode) as file:
             file.write(self.encrypt(self.decrypted_store.encode("utf-8")))
 
     def encrypt(self, source: bytes, iterations: int = ITERATIONS) -> str:
@@ -126,7 +126,7 @@ class Store:
         except InvalidToken:
             raise IncorrectPasswordError("Password is incorrect!")
 
-    def get_store(self, _decrypt: bool = False, _path: str = STORE_FILE) -> str | bytes:
+    def get_store(self, _decrypt: bool = False) -> str | bytes:
         """
         Usage:
             set _decrypt=True if you want to get decrypted store (optional).
@@ -135,7 +135,7 @@ class Store:
             otherwise a list (encrypted!) of bytes.
         """
 
-        with open(_path, "rb") as store:
+        with open(constants.STORE_FILE, "rb") as store:
             content = store.read()
             decrypted_content = None
             result = None
@@ -185,7 +185,12 @@ class Store:
         if self.does_property_exist(name):
             raise PropertyAlreadyExistError(f"This property ({name}) already exists!")
 
-        self.decrypted_store += f"\n{name} = {value}"
+        pair = f"{name} = {value}"
+
+        if self.decrypted_store != "":
+            pair = "\n" + pair
+
+        self.decrypted_store += pair
         self.save_store()
 
     def modify_property(self, name: str, f) -> None:
@@ -237,8 +242,11 @@ class Store:
         Return:
             a list of all keys in the store.
         """
-
-        return [l.split("=")[0].strip() for l in self.decrypted_store.split("\n")]
+        return (
+            [l.split("=")[0].strip() for l in self.decrypted_store.split("\n")]
+            if self.decrypted_store
+            else []
+        )
 
     def make_store_backup(self) -> None:
         """
@@ -248,13 +256,13 @@ class Store:
 
         date = datetime.date.today()
         current_date = date.strftime("%d_%m_%Y")
-        store_name = STORE_FILE.split("/")[-1]
+        store_name = constants.STORE_FILE.split("/")[-1]
         backup_name = f"{str(current_date)}_{store_name}"
         store = self.encrypt(self.decrypted_store.encode("utf-8"))
 
         self._initialize_backups_dir()
 
-        with open(f"{STORE_BACKUPS_DIR}/{backup_name}", "w+") as backup:
+        with open(f"{constants.STORE_BACKUPS_DIR}/{backup_name}", "w+") as backup:
             backup.write(store)
 
 
@@ -266,11 +274,11 @@ def try_initialize_store(password: str) -> Store | None:
 
 
 def try_initialize_existing_store(password: str) -> Store | None:
-    if os.path.isdir(APPDATA_DIR) and os.path.isfile(STORE_FILE):
+    if os.path.isdir(constants.APPDATA_DIR) and os.path.isfile(constants.STORE_FILE):
         return try_initialize_store(password)
     else:
         raise StoreIsNotInitializedError("Store isn't initialized!")
 
 
 def does_store_file_exist() -> bool:
-    return os.path.isdir(APPDATA_DIR) and os.path.isfile(STORE_FILE)
+    return os.path.isdir(constants.APPDATA_DIR) and os.path.isfile(constants.STORE_FILE)

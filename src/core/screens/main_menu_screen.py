@@ -3,7 +3,6 @@ from typing import Any, Callable
 from textual.app import ComposeResult
 from textual.widgets import Header
 
-from ..app import App
 from ..components.select_menu import SelectMenu
 from .login_screen import LoginScreen
 from .screen import Screen
@@ -18,7 +17,6 @@ class MainMenuScreen(Screen):
     def on_mount(self) -> None:
         self.screen.styles.background = "black"
 
-    # type: ignore
     def _show_screen_wrapper(self, f: Callable[[], None]) -> Callable[[], None]:
         def wrapper() -> None:
             self.app.pop_screen()

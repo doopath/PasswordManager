@@ -35,4 +35,5 @@ class SignUpScreen(Screen):
             self._show_store_exists_message()
             return
 
+        store.try_initialize_store(password)
         self.set_store_callback(password)
