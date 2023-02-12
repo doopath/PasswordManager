@@ -4,6 +4,7 @@ from .. import store
 from ..exceptions import StoreIsNotInitializedError
 from ..password_validation import PasswordValidator
 from .main_menu_screen import MainMenuScreen
+from .store_handle_screen import StoreHandleScreen
 from .message_screen import MessageScreen
 from .store_handle_screen import StoreHandleScreen
 from .screen import Screen
@@ -15,13 +16,16 @@ class MainScreen(Screen):
         super().__init__(*args, **kwargs)
 
     def on_mount(self) -> None:
-        screen = MainMenuScreen(set_store=self.set_store, app=self.app)
-        self.screen.styles.background = "black"
-        self.app.install_screen(screen)
+        screen = MainMenuScreen(set_store=self.set_store)
+        # self.app.store = store.Store("123")  # TODO: dev only
+        # screen = StoreHandleScreen(self.set_store)  # TODO: dev only
+        screen.styles.background = "black"
+        self.app.install_screen(screen, name="MainMenuScreen")
         self.app.push_screen(screen)
 
     def _show_message(self, callback: Callable[[], Any], text: str) -> None:
         message_screen = MessageScreen(callback, text)
+        message_screen.styles.background = "black"
         self.app.install_screen(message_screen)
         self.app.push_screen(message_screen)
 
@@ -35,7 +39,9 @@ class MainScreen(Screen):
 
     def _show_store_handle_screen(self) -> None:
         if self.app.store:
-            screen = StoreHandleScreen()
+            screen = StoreHandleScreen(self.set_store)
+            screen.styles.background = "black"
+            self.app.pop_screen()
             self.app.install_screen(screen)
             self.app.push_screen(screen)
         else:
@@ -61,7 +67,7 @@ class MainScreen(Screen):
             self._show_store_initialized_message()
 
         signup_screen = SignUpScreen(callback)
-        self.app.pop_screen()
+        signup_screen.styles.background = "black"
         self.app.install_screen(signup_screen)
         self.app.push_screen(signup_screen)
 

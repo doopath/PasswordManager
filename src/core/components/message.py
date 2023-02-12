@@ -8,11 +8,13 @@ class Message(Vertical):
     def __init__(self, *args, **kwargs):
         self.text = kwargs.pop("text")
 
-        if not "id" in kwargs:
-            kwargs["id"] = "message"
+        if not "classes" in kwargs:
+            kwargs["classes"] = "message"
+        else:
+            kwargs["classes"] += " message"
 
         super().__init__(*args, **kwargs)
 
     def compose(self) -> ComposeResult:
-        yield Label(self.text, id="message_label")
-        yield Button(label="OK", id="message_button", classes="button")
+        yield Label(self.text, id="message_label", classes="message_label")
+        yield Button(label="OK", id="message_button", classes="button message_button")

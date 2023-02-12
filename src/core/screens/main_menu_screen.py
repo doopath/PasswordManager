@@ -4,16 +4,14 @@ from textual.app import ComposeResult
 from textual.widgets import Header
 
 from ..app import App
-from ..components.main_menu import MainMenu
+from ..components.select_menu import SelectMenu
 from .login_screen import LoginScreen
 from .screen import Screen
 from .sign_up_screen import SignUpScreen
 
 
 class MainMenuScreen(Screen):
-    def __init__(
-        self, set_store: Callable[[str], None], app: App, *args, **kwargs
-    ) -> None:
+    def __init__(self, set_store: Callable[[str], None], *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.set_store = set_store
 
@@ -43,7 +41,7 @@ class MainMenuScreen(Screen):
 
     def compose(self) -> ComposeResult:
         yield Header(show_clock=True, id="header")
-        yield MainMenu(
+        yield SelectMenu(
             [
                 ("Log in", self._show_screen_wrapper(self._show_login_screen)),
                 ("Backup", self._show_screen_wrapper(self._show_backup_screen)),

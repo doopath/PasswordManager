@@ -5,7 +5,7 @@ from textual.containers import Vertical
 from textual.widgets import Button
 
 
-class MainMenu(Vertical):
+class SelectMenu(Vertical):
     def __init__(self, buttons: List[Tuple[str, Callable[[], None]]], *args, **kwargs):
         self._add_classes(kwargs)
         self.buttons = buttons
@@ -17,13 +17,14 @@ class MainMenu(Vertical):
 
     def _add_classes(self, kwargs: Any) -> Any:
         if "classes" in kwargs:
-            kwargs["classes"] += " main_menu"
+            kwargs["classes"] += " select_menu"
         else:
-            kwargs["classes"] = "main_menu"
+            kwargs["classes"] = "select_menu"
 
     def _add_buttons_ids(self) -> None:
         self.numbered_buttons = [
-            (b[0], b[1], f"menu_button_{self.buttons.index(b)}") for b in self.buttons
+            (b[0], b[1], f"select_menu_button_{self.buttons.index(b)}")
+            for b in self.buttons
         ]
 
     def _add_buttons_map(self) -> None:
@@ -32,9 +33,10 @@ class MainMenu(Vertical):
 
     def compose(self) -> ComposeResult:
         for button in self.numbered_buttons:
-            yield Button(button[0], classes="main_menu_button button", id=button[2])
+            yield Button(button[0], classes="select_menu_button button", id=button[2])
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
+        event.button.has_focus = False
         try:
             self.buttons_map[str(event.button.id)]()
         except KeyError:

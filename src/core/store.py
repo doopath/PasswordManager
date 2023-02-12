@@ -68,7 +68,7 @@ class Store:
 
         self._initialize_appdata_dir()
 
-        if not os.path.isfile(STORE_FILE):
+        if not does_store_file_exist():
             with open(STORE_FILE, "w") as file:
                 file.write(self.encrypt(bytes()))
 
@@ -232,6 +232,14 @@ class Store:
 
         self.modify_property(name, f)
 
+    def get_keys(self) -> list[str]:
+        """
+        Return:
+            a list of all keys in the store.
+        """
+
+        return [l.split("=")[0].strip() for l in self.decrypted_store.split("\n")]
+
     def make_store_backup(self) -> None:
         """
         Make a backup of the current store.
@@ -262,3 +270,7 @@ def try_initialize_existing_store(password: str) -> Store | None:
         return try_initialize_store(password)
     else:
         raise StoreIsNotInitializedError("Store isn't initialized!")
+
+
+def does_store_file_exist() -> bool:
+    return os.path.isdir(APPDATA_DIR) and os.path.isfile(STORE_FILE)

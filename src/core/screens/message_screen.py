@@ -15,11 +15,12 @@ class MessageScreen(Screen):
 
     def compose(self) -> ComposeResult:
         yield Horizontal(
-            Static(id="message_before"),
+            Static(classes="message_before"),
             Message(text=self.text),
-            Static(id="message_after"),
-            id="message_container",
+            Static(classes="message_after"),
+            classes="message_container",
         )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
+        event.button.has_focus = False
         self.callback()
