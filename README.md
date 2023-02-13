@@ -22,7 +22,9 @@
 
 ## Installation
 
-*Python v3.11* or higher should be installed on your system and available in the PATH as *python*.
+*Python v3.11+* should be installed on your system and available in the PATH as *python*.
+For better experience you could install one of [_NerdFonts_](https://www.nerdfonts.com/font-downloads) (*JetBrainsMono NF* for example) and set this font for the terminal emulator where you run **Doopass**.
+Also it's highly recommended to use *PowerShell v7.0+* and *Windows Terminal* on **Windows**.
 
 **Unix:**
 ```bash
