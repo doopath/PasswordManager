@@ -1,9 +1,15 @@
 # PasswordManager
 
-## Summary
+## Preview
+
+![no image](https://raw.githubusercontent.com/doopath/PasswordManager/master/assets/preview.png)
+
+
+## Navigation
 
 <ul>
-  <li><a href="#summary">Summary</a></li>
+  <li><a href="#preview">Preview</a></li>
+  <li><a href="#navigation">Navigation</a></li>
   <li><a href="#description">Description</a></li>
   <li><a href="#installation">Installation</a></li>
   <li><a href="#about">About</a></li>
@@ -13,7 +19,6 @@
 
 **Doopass** is a TUI password manager based on [_textual_](https://github.com/textualize/textual/) framework. It is run on **Windows**, **Linux** and **MacOS** (wherever python works). The old version (CLI) is actually on the [_cli_](https://github.com/doopath/PasswordManager/tree/cli) branch.
 
-![no image](https://raw.githubusercontent.com/doopath/PasswordManager/master/assets/preview.png)
 
 ## Installation
 

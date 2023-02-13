@@ -8,7 +8,7 @@ from src.core.screens.screen import Screen
 
 
 class Doopass(App):
-    CSS_PATH = "assets/styles.css"
+    CSS_PATH = "../assets/styles.css"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

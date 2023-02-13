@@ -1,6 +1,8 @@
-appdata
+doopass/appdata
 build
 dist
+
+*.egg-info
 
 venv
 
@@ -11,3 +13,4 @@ venv
 __pycache__
 ./*/__pycache__
 ./*/*/__pycache__
+./*/*/*/__pycache__

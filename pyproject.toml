@@ -1,0 +1,47 @@
+[build-system]
+requires = ['setuptools', 'setuptools-scm']
+build-backend = 'setuptools.build_meta'
+
+[project]
+name = 'Doopass'
+version = '2.0'
+authors = [
+  { name='Michael Nikishov', email='doopath@gmail.com' },
+]
+description = 'Crossplatform TUI password manager written in python'
+readme = 'README.md'
+requires-python = '>=3.11'
+classifiers = [
+    'Programming Language :: Python :: 3',
+    'License :: OSI Approved :: GNU General Public License (GPL)',
+    'Operating System :: OS Independent',
+]
+
+dependencies = [
+    'cffi==1.15.1',
+    'click==8.1.3',
+    'cryptography==39.0.0',
+    'importlib-metadata==4.13.0',
+    'markdown-it-py==2.1.0',
+    'mdurl==0.1.2',
+    'nanoid==2.0.0',
+    'pycparser==2.21',
+    'Pygments==2.14.0',
+    'pyperclip==1.8.2',
+    'rich==13.3.1',
+    'textual==0.10.1',
+    'zipp==3.12.1'
+]
+
+[tool.setuptools.packages.find]
+where = ['.']
+include = ['src', 'images']
+
+[tool.setuptools.package-data]
+'*' = ['*.css', '*.png']
+
+[project.scripts]
+doopass = 'doopass.doopass:main'
+
+[project.urls]
+'Homepage' = 'https://github.com/doopath/PasswordManager'
