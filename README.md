@@ -1,8 +1,8 @@
 # PasswordManager
 
-<img src="https://img.shields.io/badge/-Open%20Source-red" />
-<img src="https://img.shields.io/badge/latest%20version-2.0-green" />
-<img src="https://img.shields.io/badge/-crossplatform-blue" />
+[no image](https://img.shields.io/badge/-Open%20Source-red)
+[no image](https://img.shields.io/badge/latest%20version-2.0-green)
+[no image](https://img.shields.io/badge/-crossplatform-blue)
 
 #
 
