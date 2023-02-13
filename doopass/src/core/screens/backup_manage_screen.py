@@ -1,7 +1,8 @@
 from textual.app import ComposeResult
-from textual.containers import Grid, Vertical
-from textual.widgets import Button, Header, Label
+from textual.widgets import Button, Header
+
 from .. import constants
+from ..components.backup_manage_menu import BackupManageMenu
 from ..store_backup import StoreBackup
 from .screen import Screen
 
@@ -40,52 +41,7 @@ class BackupManageScreen(Screen):
         backups_names = self.store_backup.get_backups_names()
 
         yield Header(show_clock=True, id="header")
-        yield Vertical(
-            *[
-                Grid(
-                    Grid(
-                        Label(backup_name, classes="backup_manage_screen_item_label"),
-                        classes="backup_manage_screen_item_label_container",
-                    ),
-                    Grid(
-                        Button(
-                            "Restore",
-                            classes="button backup_manage_screen_item_button",
-                            id=f"backup_restore_button_BACKUP={backup_name}",
-                        ),
-                        Button(
-                            "Delete",
-                            classes="button backup_manage_screen_item_button",
-                            id=f"backup_delete_button_BACKUP={backup_name}",
-                        ),
-                        classes="backup_manage_screen_item_buttons_container",
-                    ),
-                    classes="backup_manage_screen_item",
-                )
-                for backup_name in backups_names
-            ]
-            if backups_names
-            else [Label("No backups", classes="backup_manage_screen_no_backups_label")],
-            Grid(
-                Button(
-                    "Create backup",
-                    classes="backup_manage_screen_button button",
-                    id="backup_manage_screen_create_button",
-                ),
-                Button(
-                    "To Main Menu",
-                    classes="backup_manage_screen_button button",
-                    id="backup_manage_screen_to_main_menu_button",
-                ),
-                Button(
-                    "Exit",
-                    classes="backup_manage_screen_button button",
-                    id="backup_manage_screen_exit_button",
-                ),
-                classes="backup_manage_screen_buttons_container",
-            ),
-            classes="backup_manage_screen_container",
-        )
+        yield BackupManageMenu(backups_names)
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         event.button.has_focus = False
