@@ -28,6 +28,7 @@
 ```bash
 wget https://github.com/doopath/PasswordManager/releases/download/v2.0/Doopass-2.0-py3-none-any.whl
 pip install Doopass-2.0-py3-none-any.whl
+rm Doopass-2.0-py3-none-any.whl
 ```
 
 **Windows (PowerShell):**
