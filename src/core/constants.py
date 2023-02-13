@@ -4,7 +4,7 @@
     paths could be changed.
 """
 
-VERSION: str = "1.7"
+VERSION: str = "2.0"
 APP_DIR = ""
 
 APPDATA_DIR: str = f"{APP_DIR}/appdata"
