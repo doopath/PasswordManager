@@ -22,18 +22,38 @@
 
 ## Installation
 
-The installation is unavailable now. You can clone the repository, install all _dependencies.py_ and run the app.
-You need to have installed python v3.11 or higher.
+*Python v3.11* or higher should be installed on your system and available in the PATH as *python*.
 
+**Unix:**
+```bash
+wget https://github.com/doopath/PasswordManager/releases/download/v2.0/Doopass-2.0-py3-none-any.whl
+pip install Doopass-2.0-py3-none-any.whl
+```
+
+**Windows (PowerShell):**
+```powershell
+Invoke-WebRequest https://github.com/doopath/PasswordManager/releases/download/v2.0/Doopass-2.0-py3-none-any.whl -OutFile Doopass-2.0-py3-none-any.whl
+pip install Doopass-2.0-py3-none-any.whl
+```
+
+**Build from source (Windows, Unix)**
 ```bash
 git clone https://github.com/doopath/PasswordManager.git
 cd PasswordManager
 git checkout master
-pip install -r dependencies.py
-textual run doopass.py:Doopass
-```
+python -m venv venv
 
-In the future there will be available a setup for the python package.
+# For Unix (bash, zsh)
+source venv/bin/activate
+
+# For Windows (PowerShell)
+./venv/Scripts/Activate.ps1
+
+pip install -r dependencies.py
+python -m build
+deactivate
+pip install dist/Doopass-2.0-py3-none-any.whl
+```
 
 ## About
 Store format of the current version of **Doopass** is fully compatible with the older one ([_cli_](https://github.com/doopath/PasswordManager/tree/cli)). That means you can move the store.enc file from your cli version of the **Doopass** to the *~/doopass/appdata* dir and you will able to use it.
