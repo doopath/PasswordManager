@@ -34,6 +34,7 @@ pip install Doopass-2.0-py3-none-any.whl
 ```powershell
 Invoke-WebRequest https://github.com/doopath/PasswordManager/releases/download/v2.0/Doopass-2.0-py3-none-any.whl -OutFile Doopass-2.0-py3-none-any.whl
 pip install Doopass-2.0-py3-none-any.whl
+rm Doopass-2.0-py3-none-any.whl
 ```
 
 **Build from source (Windows, Unix)**
@@ -54,6 +55,8 @@ python -m build
 deactivate
 pip install dist/Doopass-2.0-py3-none-any.whl
 ```
+
+After building and installing you can delete the *PasswordManager* dir.
 
 ## About
 Store format of the current version of **Doopass** is fully compatible with the older one ([_cli_](https://github.com/doopath/PasswordManager/tree/cli)). That means you can move the store.enc file from your cli version of the **Doopass** to the *~/doopass/appdata* dir and you will able to use it.
