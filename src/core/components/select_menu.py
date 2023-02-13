@@ -1,7 +1,7 @@
 from typing import Any, Callable, Dict, List, Tuple
 
 from textual.app import ComposeResult
-from textual.containers import Vertical, Grid
+from textual.containers import Grid
 from textual.widgets import Button, Label, Static
 
 from .. import constants

@@ -1,14 +1,15 @@
 """ Module that describes the store logic. """
 
-import datetime
-import secrets
 import os
+import secrets
 from base64 import urlsafe_b64decode as b64d
 from base64 import urlsafe_b64encode as b64e
+
 from cryptography.fernet import Fernet, InvalidToken
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+
 from . import constants
 from .exceptions import (
     IncorrectPasswordError,

@@ -1,4 +1,4 @@
-from typing import Any, Callable
+from typing import Callable
 
 from textual.app import ComposeResult
 from textual.widgets import Header
@@ -42,8 +42,8 @@ class MainMenuScreen(Screen):
         yield SelectMenu(
             [
                 ("Log in", self._show_screen_wrapper(self._show_login_screen)),
-                ("Backups", self._show_screen_wrapper(self._show_backup_screen)),
                 ("Sign up", self._show_screen_wrapper(self._show_sign_up_screen)),
+                ("Backups", self._show_screen_wrapper(self._show_backup_screen)),
                 ("Exit", self.app.exit),
             ]
         )

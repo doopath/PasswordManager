@@ -16,8 +16,6 @@ class MainScreen(Screen):
 
     def on_mount(self) -> None:
         screen = MainMenuScreen(set_store=self.set_store)
-        # self.app.store = store.Store("123")  # dev only
-        # screen = StoreHandleScreen(self.set_store)  # dev only
         screen.styles.background = "black"
         self.app.install_screen(screen, name="MainMenuScreen")
         self.app.push_screen(screen)
