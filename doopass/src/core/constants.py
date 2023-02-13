@@ -1,13 +1,13 @@
-""" A list of constants for the PasswordManager.
-    Be sure you import the whole module instead of a single constant,
-    because the update() function may be used by other modules and the
-    paths could be changed.
-"""
+""" A list of constants for the PasswordManager."""
+
+from pathlib import Path
+import os
+
 
 VERSION: str = "2.0"
-APP_DIR = ""
+APP_DIR: str = str(Path.home().joinpath("doopass"))
 
-APPDATA_DIR: str = f"{APP_DIR}/appdata"
+APPDATA_DIR: str = os.path.join(APP_DIR, "appdata")
 DOOPASS_LOGO: str = """
 ______  _____  _____ ______   ___   _____  _____ 
 |  _  \|  _  ||  _  || ___ \ / _ \ /  ___|/  ___|
@@ -38,13 +38,5 @@ HELP_LIST: str = "\n".join(
 )
 
 STORE_BACKUP_EXTENSION: str = ".enc.bak"
-STORE_FILE: str = f"{APPDATA_DIR}/store.enc"
-STORE_BACKUPS_DIR: str = f"{APPDATA_DIR}/backups"
-
-
-def update(projectRoot: str):
-    global APP_DIR, APPDATA_DIR, STORE_FILE, STORE_BACKUPS_DIR
-    APP_DIR = projectRoot
-    APPDATA_DIR = f"{APP_DIR}/appdata"
-    STORE_FILE = f"{APPDATA_DIR}/store.enc"
-    STORE_BACKUPS_DIR = f"{APPDATA_DIR}/backups"
+STORE_FILE: str = os.path.join(APPDATA_DIR, "store.enc")
+STORE_BACKUPS_DIR: str = os.path.join(APPDATA_DIR, "backups")

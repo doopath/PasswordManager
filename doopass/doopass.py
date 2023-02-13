@@ -1,10 +1,10 @@
 """ A python module that helps you to manage your secret data. """
 import os
 import sys
-from src.core.app import App
-from src.core import constants
-from src.core.screens.main_screen import MainScreen
-from src.core.screens.screen import Screen
+from doopass.src.core.app import App
+from doopass.src.core import constants
+from doopass.src.core.screens.main_screen import MainScreen
+from doopass.src.core.screens.screen import Screen
 
 
 class Doopass(App):
@@ -12,7 +12,7 @@ class Doopass(App):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        constants.update(os.path.dirname(os.path.abspath(__file__)))
+        self.init_appdir()
 
     def on_mount(self) -> None:
         main_screen = MainScreen(self)
@@ -34,6 +34,10 @@ class Doopass(App):
             self.app.pop_screen()
 
         self.app.push_screen(screen)
+
+    def init_appdir(self) -> None:
+        if not os.path.exists(constants.APP_DIR):
+            os.mkdir(constants.APP_DIR)
 
 
 def main() -> int:
