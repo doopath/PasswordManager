@@ -46,7 +46,7 @@ class StoreBackup:
     def make_backup(self) -> None:
         date = datetime.date.today()
         current_date = date.strftime("%d_%m_%Y")
-        store_name = constants.STORE_FILE.split("/")[-1]
+        store_name = constants.STORE_FILE.split(os.path.sep)[-1]
         backup_name = f"{str(current_date)}_{store_name.removesuffix('.enc')}_1{constants.STORE_BACKUP_EXTENSION}"
         store_content = self.get_store_content()
         backup_path = os.path.join(constants.STORE_BACKUPS_DIR, backup_name)

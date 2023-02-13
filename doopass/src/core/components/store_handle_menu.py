@@ -18,7 +18,13 @@ class StoreHandleMenu(Vertical):
         kwargs["classes"] += " store_handle_container"
 
     def compose(self) -> ComposeResult:
-        yield Label("Your keys", classes="store_handle_title")
+        keys = sorted(self.get_keys())
+
+        if keys:
+            yield Label("Your keys", classes="store_handle_title")
+        else:
+            yield Label("No store items", classes="store_handle_title")
+
         for key in sorted(self.get_keys()):
             yield Grid(
                 Grid(

@@ -37,6 +37,8 @@ class BackupManageScreen(Screen):
         self._update_screen()
 
     def compose(self) -> ComposeResult:
+        backups_names = self.store_backup.get_backups_names()
+
         yield Header(show_clock=True, id="header")
         yield Vertical(
             *[
@@ -60,8 +62,10 @@ class BackupManageScreen(Screen):
                     ),
                     classes="backup_manage_screen_item",
                 )
-                for backup_name in self.store_backup.get_backups_names()
-            ],
+                for backup_name in backups_names
+            ]
+            if backups_names
+            else [Label("No backups", classes="backup_manage_screen_no_backups_label")],
             Grid(
                 Button(
                     "Create backup",

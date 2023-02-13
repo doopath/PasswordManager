@@ -28,6 +28,7 @@
 #header {
     background: black;
     color: white;
+    margin: 1 2 0 2;
 }
 
 .input_form_grid {
@@ -253,6 +254,13 @@
     margin: 3;
     align: center middle;
     content-align: center middle;
+}
+
+.backup_manage_screen_no_backups_label {
+    color: #e9ecef;
+    width: 100%;
+    text-align: center;
+    margin: 2 0;
 }
 
 .backup_manage_screen_item {
