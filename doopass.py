@@ -20,9 +20,15 @@ class Doopass(App):
         self.push_screen(main_screen)
         self.screen.styles.background = "black"
 
-    def apply_screen(self, screen: Screen, pop: bool = True) -> None:
+    def apply_screen(
+        self, screen: Screen, pop: bool = True, name: str | None = None
+    ) -> None:
         screen.styles.background = "black"
-        self.app.install_screen(screen)
+
+        if name:
+            self.app.install_screen(screen, name=name)
+        else:
+            self.app.install_screen(screen)
 
         if pop:
             self.app.pop_screen()

@@ -8,6 +8,14 @@ VERSION: str = "1.7"
 APP_DIR = ""
 
 APPDATA_DIR: str = f"{APP_DIR}/appdata"
+DOOPASS_LOGO: str = """
+______  _____  _____ ______   ___   _____  _____
+|  _  \|  _  ||  _  || ___ \ / _ \ /  ___|/  ___|
+| | | || | | || | | || |_/ // /_\ \\ `--. \ `--.
+| | | || | | || | | ||  __/ |  _  | `--. \ `--. \\
+| |/ / \ \_/ /\ \_/ /| |    | | | |/\__/ //\__/ /
+|___/   \___/  \___/ \_|    \_| |_/\____/ \____/
+"""
 HELP_LIST: str = "\n".join(
     [
         "##############################################################################################################",
@@ -29,6 +37,7 @@ HELP_LIST: str = "\n".join(
     ]
 )
 
+STORE_BACKUP_EXTENSION: str = ".enc.bak"
 STORE_FILE: str = f"{APPDATA_DIR}/store.enc"
 STORE_BACKUPS_DIR: str = f"{APPDATA_DIR}/backups"
 

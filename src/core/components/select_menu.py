@@ -1,11 +1,13 @@
 from typing import Any, Callable, Dict, List, Tuple
 
 from textual.app import ComposeResult
-from textual.containers import Vertical
-from textual.widgets import Button
+from textual.containers import Vertical, Grid
+from textual.widgets import Button, Label, Static
+
+from .. import constants
 
 
-class SelectMenu(Vertical):
+class SelectMenu(Grid):
     def __init__(self, buttons: List[Tuple[str, Callable[[], None]]], *args, **kwargs):
         self._add_classes(kwargs)
         self.buttons = buttons
@@ -32,8 +34,22 @@ class SelectMenu(Vertical):
             self.buttons_map[button[2]] = button[1]
 
     def compose(self) -> ComposeResult:
-        for button in self.numbered_buttons:
-            yield Button(button[0], classes="select_menu_button button", id=button[2])
+        yield Grid(
+            Label(constants.DOOPASS_LOGO, classes="select_menu_logo_label"),
+            classes="select_menu_logo_label_container",
+        )
+        yield Grid(
+            Static(),
+            Grid(
+                *[
+                    Button(button[0], classes="select_menu_button button", id=button[2])
+                    for button in self.numbered_buttons
+                ],
+                classes="select_menu_buttons_container",
+            ),
+            Static(),
+            classes="select_menu_buttons_supercontainer",
+        )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         event.button.has_focus = False

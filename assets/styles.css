@@ -106,18 +106,43 @@
 }
 
 .select_menu {
+    height: 100%;
+    width: 100%;
+    margin: 0 5 2 5;
+    align: center middle;
+    grid-size: 1 2;
+    grid-rows: 1fr 2fr;
+}
+
+.select_menu_logo_label_container {
+    align: center top;
+    margin: 0 0 2 0;
+    height: 7;
+    min-width: 50;
+}
+
+.select_menu_logo_label {
+    color: #e9ecef;
+    text-align: left;
+}
+
+.select_menu_buttons_supercontainer {
+    width: 100%;
+    height: 16;
+    grid-size: 3 1;
+    grid-columns: 1fr 3fr 1fr;
+    align: center middle;
+}
+
+.select_menu_buttons_container {
     width: 100%;
     height: 100%;
-    margin: 5;
-    align: center middle;
-    content-align: center middle;
 }
 
 .select_menu_button {
     width: 100%;
-    margin: 1 0 0 0;
+    height: 3;
     align: center middle;
-    content-align: center middle;
 }
 
 .store_handle_container {
@@ -220,4 +245,59 @@
 .store_pair_update_label {
     color: #e9ecef;
     margin: 0 0 0 2;
+}
+
+.backup_manage_screen_container {
+    width: 100%;
+    height: 100%;
+    margin: 3;
+    align: center middle;
+    content-align: center middle;
+}
+
+.backup_manage_screen_item {
+    width: 100%;
+    height: 5;
+    margin: 0 1 1 0;
+    background: black;
+    color: #e9ecef;
+    border: tall #e9ecef;
+    grid-size: 2 1;
+    grid-columns: 1fr 1fr;
+    padding: 0 2;
+}
+
+.backup_manage_screen_item_label_container {
+    align: left middle;
+    width: 100%;
+    height: 5;
+    text-align: center;
+}
+
+.backup_manage_screen_item_buttons_container {
+    width: 100%;
+    height: 5;
+    grid-size: 2 1;
+    grid-columns: 1fr 1fr;
+}
+
+.backup_manage_screen_item_button {
+    width: 100%;
+    height: 5;
+    min-width: 10;
+    margin: 0 0 0 2;
+}
+
+.backup_manage_screen_buttons_container {
+    width: 100%;
+    align: center middle;
+    height: 3;
+    grid-size: 3 1;
+    margin: 0 1 0 0;
+    grid-columns: 1fr 1fr 1fr;
+}
+
+.backup_manage_screen_button {
+    margin: 0 1 0 1;
+    width: 100%;
 }

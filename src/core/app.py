@@ -8,5 +8,7 @@ class App(app.App):
         super().__init__(*args, **kwargs)
         self.store: Store | None
 
-    def apply_screen(self, screen: Screen, pop: bool = True) -> None:
+    def apply_screen(
+        self, screen: Screen, pop: bool = True, name: str | None = None
+    ) -> None:
         ...

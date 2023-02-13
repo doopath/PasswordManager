@@ -1,7 +1,7 @@
 import os
 from typing import List
 from . import constants
-from datetime import datetime
+import datetime
 
 
 class StoreBackup:
@@ -34,6 +34,11 @@ class StoreBackup:
     def get_store_content(self) -> str:
         return self._get_file_content(constants.STORE_FILE)
 
+    def get_backups_names(self) -> List[str]:
+        backups = os.listdir(constants.STORE_BACKUPS_DIR)
+        backups = [b for b in backups if b.endswith(".enc.bak")]
+        return [".".join(b.split(".")[:-2]) for b in backups]
+
     def get_backup_content(self, backup_name: str) -> str:
         backup_path = os.path.join(constants.STORE_BACKUPS_DIR, backup_name)
         return self._get_file_content(backup_path)
@@ -42,18 +47,23 @@ class StoreBackup:
         date = datetime.date.today()
         current_date = date.strftime("%d_%m_%Y")
         store_name = constants.STORE_FILE.split("/")[-1]
-        backup_name = f"{str(current_date)}_{store_name}"
+        backup_name = f"{str(current_date)}_{store_name.removesuffix('.enc')}_1{constants.STORE_BACKUP_EXTENSION}"
         store_content = self.get_store_content()
         backup_path = os.path.join(constants.STORE_BACKUPS_DIR, backup_name)
-        backup_path_no_ext = backup_path.split(".")[0]
-        dated_backups = self._get_dated_backups(backup_path)
+        backup_path_no_ext = "_".join(backup_path.split(".")[0].split("_")[:-1])
+        store_base_name = store_name.removesuffix(".enc")
+        dated_backups = self._get_dated_backups(
+            f"{str(current_date)}_{store_base_name}"
+        )
 
         if len(dated_backups) > 0:
             try:
                 last_number = int(dated_backups[-1].split("_")[-1].split(".")[0])
-                backup_path = f"{backup_path_no_ext}_{str(last_number + 1)}.enc.bak"
+                backup_path = f"{backup_path_no_ext}_{str(last_number + 1)}{constants.STORE_BACKUP_EXTENSION}"
             except ValueError:
-                backup_path = f"{backup_path_no_ext}_2.enc.bak"
+                backup_path = (
+                    f"{backup_path_no_ext}_2{constants.STORE_BACKUP_EXTENSION}"
+                )
 
         with open(backup_path, "w") as backup:
             backup.write(store_content)

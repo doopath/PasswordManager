@@ -63,9 +63,8 @@ class StoreHandleScreen(Screen):
         self.app.apply_screen(screen)
 
     def _show_main_menu(self) -> None:
-        screen = MainMenuScreen(self.set_store)
-        screen.styles.background = "black"
-        self.app.apply_screen(screen)
+        self.app.pop_screen()
+        self.app.push_screen("MainMenuScreen")
 
     def compose(self) -> ComposeResult:
         assert self.app.store, "Store is not initialized!"
