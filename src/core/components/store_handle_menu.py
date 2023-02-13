@@ -1,6 +1,5 @@
 from typing import Any, Callable, List
 
-import pyperclip
 from textual.app import ComposeResult
 from textual.containers import Grid, Vertical
 from textual.widgets import Button, Label

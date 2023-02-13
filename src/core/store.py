@@ -20,15 +20,16 @@ from .exceptions import (
 
 class Store:
     ITERATIONS = 100_000
+    BACKEND = default_backend()
 
     def __init__(self, password: str):
-        self.backend = default_backend()
         self.password = password
         self._initialize_store_file()
         self.decrypted_store = str(self.get_store(_decrypt=True))
 
+    @staticmethod
     def _derive_key(
-        self, password: bytes, salt: bytes, iterations: int = ITERATIONS
+        password: bytes, salt: bytes, iterations: int = ITERATIONS
     ) -> bytes:
         """Derive a secret key from a given password and salt"""
         kdf = PBKDF2HMAC(
@@ -36,7 +37,7 @@ class Store:
             length=32,
             salt=salt,
             iterations=iterations,
-            backend=self.backend,
+            backend=Store.BACKEND,
         )
         return b64e(kdf.derive(password))
 
@@ -44,14 +45,6 @@ class Store:
         return prop in [
             line.split("=")[0].strip() for line in self.decrypted_store.split("\n")
         ]
-
-    def _initialize_backups_dir(self) -> None:
-        """
-        Initialize a directory for the backups.
-        """
-
-        if not os.path.isdir(constants.STORE_BACKUPS_DIR):
-            os.mkdir(constants.STORE_BACKUPS_DIR)
 
     def _initialize_appdata_dir(self) -> None:
         """
@@ -107,7 +100,8 @@ class Store:
             )
         ).decode()
 
-    def decrypt(self, key: bytes, source: bytes) -> str:
+    @staticmethod
+    def decrypt(key: bytes, source: bytes) -> str:
         """
         Usage:
             pass a key (password) as a list of bytes,
@@ -119,7 +113,7 @@ class Store:
         decoded = b64d(source)
         salt, itr, token = decoded[:16], decoded[16:20], b64e(decoded[20:])
         iterations = int.from_bytes(itr, "big")
-        key = self._derive_key(key, salt, iterations)
+        key = Store._derive_key(key, salt, iterations)
 
         try:
             return Fernet(key).decrypt(token).decode()
@@ -247,23 +241,6 @@ class Store:
             if self.decrypted_store
             else []
         )
-
-    def make_store_backup(self) -> None:
-        """
-        Make a backup of the current store.
-        New backup will be saved on <app_dir>/backups/
-        """
-
-        date = datetime.date.today()
-        current_date = date.strftime("%d_%m_%Y")
-        store_name = constants.STORE_FILE.split("/")[-1]
-        backup_name = f"{str(current_date)}_{store_name}"
-        store = self.encrypt(self.decrypted_store.encode("utf-8"))
-
-        self._initialize_backups_dir()
-
-        with open(f"{constants.STORE_BACKUPS_DIR}/{backup_name}", "w+") as backup:
-            backup.write(store)
 
 
 def try_initialize_store(password: str) -> Store | None:

@@ -9,9 +9,7 @@ from .screen import Screen
 
 
 class LoginScreen(Screen):
-    def __init__(
-        self, set_store: Callable[[str], None], app: App, *args, **kwargs
-    ) -> None:
+    def __init__(self, set_store: Callable[[str], None], *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.set_store = set_store
 

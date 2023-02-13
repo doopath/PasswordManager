@@ -2,7 +2,6 @@
 
 import unittest
 import os
-import datetime
 import shutil
 from src.core.store import Store
 from src.core import constants
@@ -33,31 +32,6 @@ class StoreTest(unittest.TestCase):
         assert os.path.isfile(
             self.store_path
         ), "The 'initialize_store' function should create a store!"
-
-    def test_make_store_backup(self):
-        # Be sure you are not running this test at 11:59 PM XD
-        self.store.add_property("aProp", "aValue")
-        self.store.make_store_backup()
-        date = datetime.date.today().strftime("/%d_%m_%Y_")
-        backup_file_path = self.backup_path + date + self.store_path.split("/")[-1]
-
-        backup_store = self.store.decrypt(
-            self.password.encode("utf-8"),
-            self._get_file_content(backup_file_path).encode("utf-8"),
-        )
-        actual_store = self.store.decrypt(
-            self.password.encode("utf-8"),
-            self._get_file_content(self.store_path).encode("utf-8"),
-        )
-
-        is_backup_right = (
-            os.path.isdir(self.backup_path)
-            and os.path.isfile(backup_file_path)
-            and backup_store == actual_store
-        )
-        assert (
-            is_backup_right
-        ), "The 'make_store_backup' function should create a backup of current store!"
 
     def test_add_property_get_value(self):
         self.store.add_property(self.prop_name, self.prop_value)
