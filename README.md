@@ -28,16 +28,16 @@ Also it's highly recommended to use *PowerShell v7.0+* and *Windows Terminal* on
 
 **Unix:**
 ```bash
-wget https://github.com/doopath/PasswordManager/releases/download/v2.0/Doopass-2.0-py3-none-any.whl
-pip install Doopass-2.0-py3-none-any.whl
-rm Doopass-2.0-py3-none-any.whl
+wget https://github.com/doopath/PasswordManager/releases/download/v2.1/Doopass-2.1-py3-none-any.whl
+pip install Doopass-2.1-py3-none-any.whl
+rm Doopass-2.1-py3-none-any.whl
 ```
 
 **Windows (PowerShell):**
 ```powershell
-Invoke-WebRequest https://github.com/doopath/PasswordManager/releases/download/v2.0/Doopass-2.0-py3-none-any.whl -OutFile Doopass-2.0-py3-none-any.whl
-pip install Doopass-2.0-py3-none-any.whl
-rm Doopass-2.0-py3-none-any.whl
+Invoke-WebRequest https://github.com/doopath/PasswordManager/releases/download/v2.1/Doopass-2.1-py3-none-any.whl -OutFile Doopass-2.1-py3-none-any.whl
+pip install Doopass-2.1-py3-none-any.whl
+rm Doopass-2.1-py3-none-any.whl
 ```
 
 **Build from source (Windows, Unix)**
@@ -56,7 +56,7 @@ source venv/bin/activate
 pip install -r dependencies.py
 python -m build
 deactivate
-pip install dist/Doopass-2.0-py3-none-any.whl
+pip install dist/Doopass-2.1-py3-none-any.whl
 ```
 
 After building and installing you can delete the *PasswordManager* dir.

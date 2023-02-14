@@ -15,9 +15,6 @@ class MainMenuScreen(Screen):
         super().__init__(*args, **kwargs)
         self.set_store = set_store
 
-    def on_mount(self) -> None:
-        self.screen.styles.background = "black"
-
     def _show_screen_wrapper(self, f: Callable[[], None]) -> Callable[[], None]:
         def wrapper() -> None:
             self.app.pop_screen()
@@ -36,6 +33,9 @@ class MainMenuScreen(Screen):
     def _show_sign_up_screen(self) -> None:
         screen = SignUpScreen(set_store=self.set_store)
         self.app.apply_screen(screen, pop=False)
+
+    def on_mount(self) -> None:
+        self.screen.styles.background = "black"
 
     def compose(self) -> ComposeResult:
         yield Header(show_clock=True, id="header")
