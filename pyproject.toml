@@ -3,7 +3,7 @@ requires = ['setuptools', 'setuptools-scm']
 build-backend = 'setuptools.build_meta'
 
 [project]
-name = 'Doopass'
+name = 'doopass'
 version = '2.1'
 authors = [
   { name='Michael Nikishov', email='doopath@gmail.com' },
