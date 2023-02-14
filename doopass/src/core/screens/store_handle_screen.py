@@ -46,7 +46,7 @@ class StoreHandleScreen(Screen):
             callback=callback, key=key, value=password_value, button_text="Update"
         )
         screen.styles.background = "black"
-        self.app.apply_screen(screen)
+        self.app.apply_screen(screen, pop=False)
 
     def _handle_add_pair(self) -> None:
         def callback(key: str, value: str) -> None:

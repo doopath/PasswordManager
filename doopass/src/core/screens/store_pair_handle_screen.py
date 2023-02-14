@@ -26,6 +26,19 @@ class StorePairHandleScreen(Screen):
         self.button_text = button_text
         super().__init__(*args, **kwargs)
 
+    def _clean_ascii(self, text: str) -> str:
+        return text.encode("utf-8").replace(b"\x00", b"").decode("utf-8")
+
+    def _submit(self) -> None:
+        key: str = self.get_widget_by_id(self.key_input_field_id).__getattribute__(
+            "value"
+        )
+        password: str = self.get_widget_by_id(
+            self.password_input_field_id
+        ).__getattribute__("value")
+
+        self.callback(key, self._clean_ascii(password))
+
     def compose(self) -> ComposeResult:
         yield StorePairHandlePage(
             self.key, self.password_value, self.button_text
@@ -33,12 +46,6 @@ class StorePairHandleScreen(Screen):
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == self.update_button_id:
-            key: str = self.get_widget_by_id(self.key_input_field_id).__getattribute__(
-                "value"
-            )
-            password: str = self.get_widget_by_id(
-                self.password_input_field_id
-            ).__getattribute__("value")
-            self.callback(key, password)
+            self._submit()
         elif event.button.id == self.back_button_id:
             self.app.pop_screen()
