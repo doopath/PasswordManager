@@ -56,8 +56,9 @@ class LoginPageContainer(Vertical):
         # so it's needed to avoid double pasting.
 
     def on_key(self, event: events.Key):
-        event.stop()
-        self._set_store()
+        if event.key == "enter":
+            event.stop()
+            self._set_store()
 
     def on_button_pressed(self, event: Button.Pressed):
         event.button.has_focus = False
