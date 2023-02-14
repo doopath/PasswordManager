@@ -1,6 +1,6 @@
 from typing import Any, Callable
 from ..components.message import Message
-from textual.screen import Screen
+from .screen import Screen
 from textual.app import ComposeResult
 from textual.widgets import Button, Static
 from textual.containers import Horizontal

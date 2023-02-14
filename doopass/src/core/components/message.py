@@ -16,5 +16,9 @@ class Message(Vertical):
         super().__init__(*args, **kwargs)
 
     def compose(self) -> ComposeResult:
+        button = Button(
+            label="OK", id="message_button", classes="button message_button"
+        )
+        button.focus()
         yield Label(self.text, id="message_label", classes="message_label")
-        yield Button(label="OK", id="message_button", classes="button message_button")
+        yield button

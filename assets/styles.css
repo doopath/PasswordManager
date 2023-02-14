@@ -10,6 +10,7 @@
 .button {
     background: #e9ecef;
     color: #1b1b1b;
+    border: none;
 }
 
 .button:focus {
