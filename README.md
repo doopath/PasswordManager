@@ -12,6 +12,7 @@
   <li><a href="#navigation">Navigation</a></li>
   <li><a href="#description">Description</a></li>
   <li><a href="#installation">Installation</a></li>
+  <li><a href="#navigation">Usage</a></li>
   <li><a href="#about">About</a></li>
 </ul>
 
@@ -61,7 +62,24 @@ pip install dist/Doopass-2.1-py3-none-any.whl
 
 After building and installing you can delete the *PasswordManager* dir.
 
+## Usage
+
+After installation of the **Doopass** you can run it by typing *doopass* in the terminal. First of all after starting the **Doopass** at the first time you should create a store: press the *Sign Up* button in the main menu and enter a password for the store. Every time you run **Doopass** you should *Log In* to decrypt your store (because all your data is stored on your disk and encrypted). After that you will be able to manage the store (add, delete, update and copy key-value pairs). For better experience type ```H``` in the main menu to see the *help list*.
+
+More available actions:
+
+```
+Q or ESCAPE - quit the app
+SPACE - leave help screen
+H - open help screen
+DownArrow or TAB or J - focus next element
+UpArrow or Shift+TAB or K - focus previous element
+```
+
+Register of the key pressed doesn't matter, but be sure you are using english keyboard layout.
+
 ## About
+
 Store format of the current version of **Doopass** is fully compatible with the older one ([_cli_](https://github.com/doopath/PasswordManager/tree/cli)). That means you can move the store.enc file from your cli version of the **Doopass** to the *~/doopass/appdata* dir and you will able to use it.
 
 
