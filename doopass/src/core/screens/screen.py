@@ -23,3 +23,6 @@ class Screen(screen.Screen):
             case "escape" | "q":
                 event.stop()
                 self.app.exit()
+
+    def on_paste(self, event: events.Paste) -> None:
+        event.stop()

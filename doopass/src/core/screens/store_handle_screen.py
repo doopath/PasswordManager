@@ -60,7 +60,7 @@ class StoreHandleScreen(Screen):
             callback=callback, key="", value="", button_text="Add pair"
         )
         screen.styles.background = "black"
-        self.app.apply_screen(screen)
+        self.app.apply_screen(screen, pop=False)
 
     def _show_main_menu(self) -> None:
         self.app.pop_screen()

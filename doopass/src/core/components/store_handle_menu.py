@@ -20,6 +20,25 @@ class StoreHandleMenu(Vertical):
     def compose(self) -> ComposeResult:
         keys = sorted(self.get_keys())
 
+        yield Grid(
+            Button(
+                "Add pair",
+                classes="store_handle_button button",
+                id="add_pair_button",
+            ),
+            Button(
+                "To Main Menu",
+                classes="store_handle_button button",
+                id="to_main_menu_button",
+            ),
+            Button(
+                "Exit",
+                classes="store_handle_button button",
+                id="exit_button",
+            ),
+            classes="store_handle_buttons_container",
+        )
+
         if keys:
             yield Label("Your keys", classes="store_handle_title")
         else:
@@ -51,21 +70,3 @@ class StoreHandleMenu(Vertical):
                 ),
                 classes="store_handle_item",
             )
-        yield Grid(
-            Button(
-                "Add pair",
-                classes="store_handle_button button",
-                id="add_pair_button",
-            ),
-            Button(
-                "To Main Menu",
-                classes="store_handle_button button",
-                id="to_main_menu_button",
-            ),
-            Button(
-                "Exit",
-                classes="store_handle_button button",
-                id="exit_button",
-            ),
-            classes="store_handle_buttons_container",
-        )

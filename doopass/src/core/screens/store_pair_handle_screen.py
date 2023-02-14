@@ -41,4 +41,4 @@ class StorePairHandleScreen(Screen):
             ).__getattribute__("value")
             self.callback(key, password)
         elif event.button.id == self.back_button_id:
-            self.callback(self.key, self.password_value)
+            self.app.pop_screen()

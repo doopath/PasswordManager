@@ -11,6 +11,27 @@ class BackupManageMenu(Vertical):
 
     def compose(self) -> ComposeResult:
         yield Vertical(
+            Grid(
+                Button(
+                    "Create backup",
+                    classes="backup_manage_screen_button button",
+                    id="backup_manage_screen_create_button",
+                ),
+                Button(
+                    "To Main Menu",
+                    classes="backup_manage_screen_button button",
+                    id="backup_manage_screen_to_main_menu_button",
+                ),
+                Button(
+                    "Exit",
+                    classes="backup_manage_screen_button button",
+                    id="backup_manage_screen_exit_button",
+                ),
+                classes="backup_manage_screen_buttons_container",
+            ),
+            Label("Your backups", classes="backup_manage_screen_no_backups_label")
+            if self.backups_names
+            else Label("No backups", classes="backup_manage_screen_no_backups_label"),
             *[
                 Grid(
                     Grid(
@@ -33,26 +54,6 @@ class BackupManageMenu(Vertical):
                     classes="backup_manage_screen_item",
                 )
                 for backup_name in self.backups_names
-            ]
-            if self.backups_names
-            else [Label("No backups", classes="backup_manage_screen_no_backups_label")],
-            Grid(
-                Button(
-                    "Create backup",
-                    classes="backup_manage_screen_button button",
-                    id="backup_manage_screen_create_button",
-                ),
-                Button(
-                    "To Main Menu",
-                    classes="backup_manage_screen_button button",
-                    id="backup_manage_screen_to_main_menu_button",
-                ),
-                Button(
-                    "Exit",
-                    classes="backup_manage_screen_button button",
-                    id="backup_manage_screen_exit_button",
-                ),
-                classes="backup_manage_screen_buttons_container",
-            ),
+            ],
             classes="backup_manage_screen_container",
         )
