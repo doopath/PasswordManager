@@ -4,7 +4,7 @@ build-backend = 'setuptools.build_meta'
 
 [project]
 name = 'doopass'
-version = '2.1'
+version = '2.2'
 authors = [
   { name='Michael Nikishov', email='doopath@gmail.com' },
 ]

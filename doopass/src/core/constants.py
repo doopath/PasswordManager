@@ -4,7 +4,7 @@ from pathlib import Path
 import os
 
 
-VERSION: str = "2.1"
+VERSION: str = "2.2"
 APP_DIR: str = str(Path.home().joinpath("doopass"))
 
 APPDATA_DIR: str = os.path.join(APP_DIR, "appdata")
