@@ -41,6 +41,11 @@ pip install Doopass-2.1-py3-none-any.whl
 rm Doopass-2.1-py3-none-any.whl
 ```
 
+**Or just (on all platforms):**
+```bash
+pip install doopass==2.1
+```
+
 **Build from source (Windows, Unix)**
 ```bash
 git clone https://github.com/doopath/PasswordManager.git
