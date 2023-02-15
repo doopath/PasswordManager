@@ -1,29 +1,24 @@
 """ A python module that helps you to manage your secret data. """
-import os
+import logging
 import sys
 
-from doopass.src.core import constants
+from textual.cli import cli
+
 from doopass.src.core.app import App
 from doopass.src.core.screens.main_screen import MainScreen
 from doopass.src.core.screens.screen import Screen
 
 
 class Doopass(App):
-    CSS_PATH = "../assets/styles.css"
-
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self._init_appdir()
-
-    def _init_appdir(self) -> None:
-        if not os.path.exists(constants.APP_DIR):
-            os.mkdir(constants.APP_DIR)
 
     def on_mount(self) -> None:
         main_screen = MainScreen(self)
         self.install_screen(main_screen, name="MainScreen")
         self.push_screen(main_screen)
         self.screen.styles.background = "black"
+        logging.debug("The app has been launched")
 
     def apply_screen(
         self, screen: Screen, pop: bool = True, name: str | None = None
@@ -40,10 +35,13 @@ class Doopass(App):
 
         self.app.push_screen(screen)
 
+    def exit(self, result=None, message=None) -> None:
+        logging.debug("App exited\n")
+        super().exit(result, message)
+
 
 def main() -> int:
-    app = Doopass()
-    app.run()
+    cli.run(["run", "doopass.doopass:Doopass"])
 
     return 0
 

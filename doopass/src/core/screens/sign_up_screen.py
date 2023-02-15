@@ -1,3 +1,4 @@
+import logging
 from typing import Callable
 from textual.app import ComposeResult
 from .screen import Screen
@@ -18,9 +19,11 @@ class SignUpScreen(Screen):
         self.app.push_screen("MainMenuScreen")
 
     def _show_store_exists_message(self) -> None:
-        screen = MessageScreen(
-            callback=self._show_main_screen, text="Store already exists!"
-        )
+        def callback() -> None:
+            self.app.pop_screen()
+            self._show_main_screen()
+
+        screen = MessageScreen(callback=callback, text="Store already exists!")
         screen.styles.background = "black"
         self.app.install_screen(screen)
         self.app.pop_screen()
@@ -31,9 +34,13 @@ class SignUpScreen(Screen):
         yield SignUpPage(set_store=self.set_store).create()
 
     def set_store(self, password: str) -> None:
+        logging.debug("Setting store")
+
         if store.does_store_file_exist():
+            logging.debug("Trying to create a store, that already exists")
             self._show_store_exists_message()
             return
 
         store.try_initialize_store(password)
+        logging.debug("Creating a new store")
         self.set_store_callback(password)

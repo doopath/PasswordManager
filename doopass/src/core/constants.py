@@ -4,10 +4,13 @@ from pathlib import Path
 import os
 
 
-VERSION: str = "2.2"
+VERSION: str = "2.3"
 APP_DIR: str = str(Path.home().joinpath("doopass"))
-
 APPDATA_DIR: str = os.path.join(APP_DIR, "appdata")
+STORE_BACKUP_EXTENSION: str = ".enc.bak"
+STORE_FILE: str = os.path.join(APPDATA_DIR, "store.enc")
+LOG_FILE: str = os.path.join(APPDATA_DIR, "doopass.log")
+STORE_BACKUPS_DIR: str = os.path.join(APPDATA_DIR, "backups")
 DOOPASS_LOGO: str = """
 ______  _____  _____ ______   ___   _____  _____ 
 |  _  \|  _  ||  _  || ___ \ / _ \ /  ___|/  ___|
@@ -16,7 +19,3 @@ ______  _____  _____ ______   ___   _____  _____
 | |/ / \ \_/ /\ \_/ /| |    | | | |/\__/ //\__/ /
 |___/   \___/  \___/ \_|    \_| |_/\____/ \____/ 
 """
-
-STORE_BACKUP_EXTENSION: str = ".enc.bak"
-STORE_FILE: str = os.path.join(APPDATA_DIR, "store.enc")
-STORE_BACKUPS_DIR: str = os.path.join(APPDATA_DIR, "backups")

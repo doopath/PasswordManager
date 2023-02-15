@@ -25,6 +25,7 @@ class LoginPageContainer(Vertical):
             placeholder="Password for the store",
             id=self.input_id,
             classes="input_form_input_field input_field",
+            password=True,
         )
         input_field.focus()
         return input_field

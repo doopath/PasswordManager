@@ -1,7 +1,9 @@
+import datetime
+import logging
 import os
 from typing import List
+
 from . import constants
-import datetime
 
 
 class StoreBackup:
@@ -10,10 +12,14 @@ class StoreBackup:
 
     def _initialize_backup_dir(self) -> None:
         if not os.path.isdir(constants.APPDATA_DIR):
+            logging.debug("The appdata directory doesn't exist; creating it")
             os.mkdir(constants.APPDATA_DIR)
+            logging.debug("The appdata directory has been created")
 
         if not os.path.isdir(constants.STORE_BACKUPS_DIR):
+            logging.debug("The store backups directory doesn't exist; creating it")
             os.mkdir(constants.STORE_BACKUPS_DIR)
+            logging.debug("The store backups directory has been created")
 
     def _get_file_content(self, filepath: str) -> str:
         content = ""
@@ -44,6 +50,7 @@ class StoreBackup:
         return self._get_file_content(backup_path)
 
     def make_backup(self) -> None:
+        logging.debug("Making a backup of the store")
         date = datetime.date.today()
         current_date = date.strftime("%d_%m_%Y")
         store_name = constants.STORE_FILE.split(os.path.sep)[-1]
@@ -68,12 +75,21 @@ class StoreBackup:
         with open(backup_path, "w") as backup:
             backup.write(store_content)
 
+        logging.debug("A backup of the store has been created")
+
     def swap_store_with_backup(self, backup_name: str) -> None:
+        logging.debug(f"Swapping the store with a backup BACKUP_NAME={backup_name}")
         backup_content = self.get_backup_content(backup_name)
         self.make_backup()
 
         with open(constants.STORE_FILE, "w+") as store:
             store.write(backup_content)
 
+        logging.debug(
+            f"The store has been swapped with the backup BACKUP_NAME={backup_name}"
+        )
+
     def delete_backup(self, backup_name: str) -> None:
+        logging.debug(f"Deleting a backup BACKUP_NAME={backup_name}")
         os.remove(os.path.join(constants.STORE_BACKUPS_DIR, backup_name))
+        logging.debug(f"The backup has been deleted BACKUP_NAME={backup_name}")

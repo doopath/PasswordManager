@@ -1,5 +1,6 @@
 """ Module that describes the store logic. """
 
+import logging
 import os
 import secrets
 from base64 import urlsafe_b64decode as b64d
@@ -53,7 +54,9 @@ class Store:
         """
 
         if not os.path.isdir(constants.APPDATA_DIR):
+            logging.debug("Initializing appdata directory")
             os.mkdir(constants.APPDATA_DIR)
+            logging.debug("Appdata directory has been initialized")
 
     def _initialize_store_file(self) -> None:
         """
@@ -64,7 +67,9 @@ class Store:
 
         if not does_store_file_exist():
             with open(constants.STORE_FILE, "w") as file:
+                logging.debug("Initializing a store file")
                 file.write(self.encrypt(bytes()))
+                logging.debug("The store file has been initialized")
 
     def save_store(self, overwrite=False) -> None:
         """
@@ -117,8 +122,11 @@ class Store:
         key = Store._derive_key(key, salt, iterations)
 
         try:
-            return Fernet(key).decrypt(token).decode()
+            result = Fernet(key).decrypt(token).decode()
+            logging.debug("Store has been successfully decrypted")
+            return result
         except InvalidToken:
+            logging.debug("Cannot decrypt the store - incorrect password")
             raise IncorrectPasswordError("Password is incorrect!")
 
     def get_store(self, _decrypt: bool = False) -> str | bytes:
@@ -248,13 +256,17 @@ def try_initialize_store(password: str) -> Store | None:
     try:
         return Store(password)
     except IncorrectPasswordError:
+        logging.debug("Cannot initialize a store - incorrect password")
         return None
 
 
 def try_initialize_existing_store(password: str) -> Store | None:
     if os.path.isdir(constants.APPDATA_DIR) and os.path.isfile(constants.STORE_FILE):
-        return try_initialize_store(password)
+        store = try_initialize_store(password)
+        logging.debug(f"Existing store has been initialized")
+        return store
     else:
+        logging.debug("Cannot initialize a store - store file doesn't exist")
         raise StoreIsNotInitializedError("Store isn't initialized!")
 
 

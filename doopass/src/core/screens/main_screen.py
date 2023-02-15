@@ -1,3 +1,4 @@
+import logging
 from typing import Any, Callable
 
 from .. import store
@@ -70,6 +71,7 @@ class MainScreen(Screen):
 
     def set_store(self, password: str) -> None:
         try:
+            logging.debug("Setting a store")
             self.app.store = store.try_initialize_existing_store(password)
         except StoreIsNotInitializedError:
             self._show_store_is_not_initialized_message()
