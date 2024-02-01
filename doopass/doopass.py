@@ -2,8 +2,6 @@
 import logging
 import sys
 
-from textual.cli import cli
-
 from doopass.src.core.app import App
 from doopass.src.core.screens.main_screen import MainScreen
 from doopass.src.core.screens.screen import Screen
@@ -41,8 +39,8 @@ class Doopass(App):
 
 
 def main() -> int:
-    cli.run(["run", "doopass.doopass:Doopass"])
-
+    app = Doopass()
+    app.run()
     return 0
 
 
