@@ -2,15 +2,14 @@
 import logging
 import sys
 
+from typing import override
+
 from doopass.src.core.app import App
 from doopass.src.core.screens.main_screen import MainScreen
 from doopass.src.core.screens.screen import Screen
 
 
 class Doopass(App):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-
     def on_mount(self) -> None:
         main_screen = MainScreen(self)
         self.install_screen(main_screen, name="MainScreen")
@@ -18,6 +17,7 @@ class Doopass(App):
         self.screen.styles.background = "black"
         logging.debug("The app has been launched")
 
+    @override
     def apply_screen(
         self, screen: Screen, pop: bool = True, name: str | None = None
     ) -> None:
