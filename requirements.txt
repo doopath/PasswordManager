@@ -1,6 +1,10 @@
 asgiref==3.7.2
 Django==5.0.2
+django-filter==24.1
+djangorestframework==3.14.0
 gunicorn==21.2.0
+Markdown==3.5.2
 packaging==23.2
 psycopg2-binary==2.9.9
+pytz==2024.1
 sqlparse==0.4.4
