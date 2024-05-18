@@ -4,3 +4,5 @@ env/
 */*/*/__pycache__/
 */*/*/*/__pycache__/
 static/
+doopass/mypy.ini
+.idea/

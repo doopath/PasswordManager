@@ -15,23 +15,30 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.urls import include, path
 from rest_framework import routers
-from .views import UsersView
 
+from .views import UserView, StorageView
 
 router = routers.DefaultRouter()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
-    path('api/users/', UsersView.as_view(http_method_names=['get'])),
-    path('api/users/<int:id>/', UsersView.as_view(http_method_names=['get'])),
-    path('api/users/create/', UsersView.as_view(http_method_names=['post'])),
-    path('api/users/update/', UsersView.as_view(http_method_names=['put'])),
-    path('api/users/delete/', UsersView.as_view(http_method_names=['delete']))
-]
 
+    path('api/users/', UserView.as_view(http_method_names=['get'])),
+    path('api/users/<int:id>/', UserView.as_view(http_method_names=['get'])),
+    path('api/users/create/', UserView.as_view(http_method_names=['post'])),
+    path('api/users/update/', UserView.as_view(http_method_names=['put'])),
+    path('api/users/delete/', UserView.as_view(http_method_names=['delete'])),
+
+    path('api/storages/', StorageView.as_view(http_method_names=['get'])),
+    path('api/storages/<int:id>/', StorageView.as_view(http_method_names=['get'])),
+    path('api/storages/of-owner/<int:owner_id>/', StorageView.as_view(http_method_names=['get'])),
+    path('api/storages/create/', StorageView.as_view(http_method_names=['post'])),
+    path('api/storages/update/', StorageView.as_view(http_method_names=['put'])),
+    path('api/storages/delete/', StorageView.as_view(http_method_names=['delete']))
+]
 
 urlpatterns += staticfiles_urlpatterns()

@@ -9,6 +9,5 @@ class User(models.Model):
 
 class Storage(models.Model):
     name = models.CharField(max_length=255)
-    password = models.CharField()
     owner = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    content = models.CharField(default='')
+    content = models.CharField(default='', blank=True)
