@@ -6,13 +6,14 @@ SYMBOLS = list('!@#$%^&*()-_+=:;,./?|\\')
 
 
 def hash_password(password: str) -> str:
-   password_bytes = password.encode('utf-8')
-   hashed_bytes = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
+   bytes = password.encode('utf-8')
+   hashed_bytes = bcrypt.hashpw(bytes, bcrypt.gensalt())
    return hashed_bytes.decode('utf-8')
 
 
 def does_password_match(hashed: str, password: str) -> bool:
-    return hashed == hash_password(password)
+    bytes = hashed.encode('utf-8')
+    return hashed == bcrypt.hashpw(password.encode('utf-8'), bytes).decode('utf-8')
 
 
 def is_password_valid(password: str) -> bool:

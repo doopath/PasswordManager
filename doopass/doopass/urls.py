@@ -29,7 +29,7 @@ urlpatterns = [
     path('api/users/', UsersView.as_view(http_method_names=['get'])),
     path('api/users/<int:id>/', UsersView.as_view(http_method_names=['get'])),
     path('api/users/create/', UsersView.as_view(http_method_names=['post'])),
-    path('api/users/update/<int:id>/', UsersView.as_view(http_method_names=['put'])),
+    path('api/users/update/', UsersView.as_view(http_method_names=['put'])),
     path('api/users/delete/<int:id>/', UsersView.as_view(http_method_names=['delete']))
 ]
 

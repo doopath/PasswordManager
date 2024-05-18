@@ -42,13 +42,34 @@ class UsersView(APIView):
         return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
 
 
-    # @override
-    # def put(self, request: Request) -> Response:
-    #     serializer = UsersSerializer(data=request.data)
-    #     currentPassword = serializer.data.get('currentPassword')
+    @override # Make this working
+    def put(self, request: Request) -> Response:
+        user = User.objects.get(pk=request.data['id'])
 
-    #     if not serializer.is_valid():
-    #         return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+        try:
+            self._validate_password(user, request)
+        except Exception:
+            return Response('Invalid password!', status=status.HTTP_204_NO_CONTENT)
+
+        serializer = UsersSerializer(user, data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+    def _validate_password(self, user: User, request: Request) -> None:
+        if 'newPassword' in request.data:
+            if not self._does_new_password_match(request):
+                raise Exception("Invalid password!")
+            request.data['password'] = password.hash_password(request.data['newPassword'])
+        elif not password.does_password_match(user.password, request.data['password']):
+                raise Exception("Invalid password!")
+        else:
+            request.data['password'] = password.hash_password(request.data['password'])
 
 
     def _set_password(self, request: Request) -> bool:
@@ -57,6 +78,18 @@ class UsersView(APIView):
         if not password.is_password_valid(user_password): return False
 
         request.data['password'] = password.hash_password(user_password)
+
+        return True
+
+
+    def _does_new_password_match(self, request: Request) -> bool:
+        supposed_password = request.data['newPassword']
+        current_password = request.data['password']
+        user_id = request.data['id']
+        user = User.objects.get(pk = user_id)
+
+        if not password.is_password_valid(supposed_password): return False
+        if not password.does_password_match(user.password, current_password): return False
 
         return True
 
