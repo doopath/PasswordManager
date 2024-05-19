@@ -117,15 +117,15 @@ class StorageView(APIView):
         if 'id' in kwargs:
             data = Storage.objects.get(pk=kwargs['id'])
             serializer = StorageSerializer(data)
-            return Response(serializer.data, status.HTTP_200_OK)
         elif 'owner_id' in kwargs:
-            data = Storage.objects.filter(owner_id=kwargs['owner_id'])
-            serializer = StorageSerializer(data, len(data) > 1)
-            return Response(serializer.data, status.HTTP_200_OK)
+            user = User.objects.get(pk=kwargs['owner_id'])
+            data = Storage.objects.filter(owner=user)
+            serializer = StorageSerializer(data, many=True)
         else:
             data = Storage.objects.all()
             serializer = StorageSerializer(data, many=True)
-            return Response(serializer.data, status.HTTP_200_OK)
+
+        return Response(serializer.data, status.HTTP_200_OK)
 
     def post(self, request: Request) -> Response:
         user = User.objects.get(pk=request.data['owner_id'])

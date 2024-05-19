@@ -38,6 +38,13 @@ urlpatterns = [
     path('api/storages/of-owner/<int:owner_id>/', StorageView.as_view(http_method_names=['get'])),
     path('api/storages/create/', StorageView.as_view(http_method_names=['post'])),
     path('api/storages/update/', StorageView.as_view(http_method_names=['put'])),
+    path('api/storages/delete/', StorageView.as_view(http_method_names=['delete'])),
+
+    path('api/backups/', StorageView.as_view(http_method_names=['get'])),
+    path('api/backups/<int:id>/', StorageView.as_view(http_method_names=['get'])),
+    path('api/backups/of-storage/<int:owner_id>/', StorageView.as_view(http_method_names=['get'])),
+    path('api/storages/create/', StorageView.as_view(http_method_names=['post'])),
+    path('api/storages/update/', StorageView.as_view(http_method_names=['put'])),
     path('api/storages/delete/', StorageView.as_view(http_method_names=['delete']))
 ]
 
