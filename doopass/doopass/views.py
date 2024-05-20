@@ -3,12 +3,17 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import User, Storage
+from .models import User, Storage, Backup
 from .modules import password
-from .serializers import UserSerializer, StorageSerializer
+from .serializers import UserSerializer, StorageSerializer, BackupSerializer
 
 
-class UserView(APIView):
+
+class BaseUserDataManagementAPIView(APIView):
+    def _does_user_password_match(self, user: User, request: Request, keyword: str = 'password') -> bool:
+        return password.does_password_match(user.password, request.data[keyword])
+
+class UserView(BaseUserDataManagementAPIView):
     def get(self, request: Request, **kwargs) -> Response:
         is_id_set = 'id' in kwargs
 
@@ -75,7 +80,7 @@ class UserView(APIView):
             if not self._does_new_password_match(request):
                 raise Exception("Invalid password!")
             request.data['password'] = password.hash_password(request.data['newPassword'])
-        elif not password.does_password_match(user.password, request.data['password']):
+        elif not self._does_user_password_match(user, request):
             raise Exception("Invalid password!")
         else:
             request.data['password'] = password.hash_password(request.data['password'])
@@ -112,7 +117,7 @@ class UserView(APIView):
         return User.objects.filter(pk=pk).exists()
 
 
-class StorageView(APIView):
+class StorageView(BaseUserDataManagementAPIView):
     def get(self, request: Request, **kwargs) -> Response:
         if 'id' in kwargs:
             data = Storage.objects.get(pk=kwargs['id'])
@@ -172,12 +177,58 @@ class StorageView(APIView):
         user = storage.owner
 
         if not self._does_user_password_match(user, request):
-            return Response("Invalid password!", status=status.HTTP_401_UNAUTHORIZED)
+            return Response("Wrong password!", status=status.HTTP_401_UNAUTHORIZED)
         
         storage.delete()
 
         return Response("Successfully deleted!", status=status.HTTP_200_OK)
 
-    def _does_user_password_match(self, user: User, request: Request) -> bool:
-        return password.does_password_match(user.password, request.data['password'])
 
+class BackupView(BaseUserDataManagementAPIView):
+    def get(self, request: Request, **kwargs) -> Response:
+        if 'id' in kwargs:
+            data = Backup.objects.get(pk=kwargs['id'])
+            serializer = BackupSerializer(data)
+        elif 'owner_id' in kwargs:
+            user = User.objects.get(pk=kwargs['owner_id'])
+            data = Backup.objects.filter(owner=user)
+            serializer = BackupSerializer(data, many=True)
+        elif 'storage_id' in kwargs:
+            storage = Storage.objects.get(pk=kwargs['storage_id'])
+            data = Backup.objects.filter(storage=storage)
+            serializer = BackupSerializer(data, many=True)
+        else:
+            data = Backup.objects.all()
+            serializer = BackupSerializer(data, many=True)
+
+        return Response(serializer.data, status.HTTP_200_OK)
+
+    def post(self, request: Request) -> Response:
+        user = User.objects.get(pk=request.data['owner_id'])
+
+        if not self._does_user_password_match(user, request):
+            return Response("Wrong password!", status=status.HTTP_401_UNAUTHORIZED)
+
+        serializer = BackupSerializer(data={
+            'content': request.data['content'],
+            'owner': request.data['owner_id'],
+            'storage': request.data['storage_id']
+        })
+
+        if not serializer.is_valid():
+            return Response("Invalid data passed!", status=status.HTTP_204_NO_CONTENT)
+
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def delete(self, request: Request) -> Response:
+        user = User.objects.get(pk=request.data['owner_id'])
+        backup = Backup.objects.get(pk=request.data['id'])
+
+        if not self._does_user_password_match(user, request):
+            return Response("Wrong password!", status=status.HTTP_401_UNAUTHORIZED)
+
+        backup.delete()
+
+        return Response("Successfully deleted!", status=status.HTTP_200_OK)

@@ -19,7 +19,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path
 from rest_framework import routers
 
-from .views import UserView, StorageView
+from .views import UserView, StorageView, BackupView
 
 router = routers.DefaultRouter()
 
@@ -40,12 +40,12 @@ urlpatterns = [
     path('api/storages/update/', StorageView.as_view(http_method_names=['put'])),
     path('api/storages/delete/', StorageView.as_view(http_method_names=['delete'])),
 
-    path('api/backups/', StorageView.as_view(http_method_names=['get'])),
-    path('api/backups/<int:id>/', StorageView.as_view(http_method_names=['get'])),
-    path('api/backups/of-storage/<int:owner_id>/', StorageView.as_view(http_method_names=['get'])),
-    path('api/storages/create/', StorageView.as_view(http_method_names=['post'])),
-    path('api/storages/update/', StorageView.as_view(http_method_names=['put'])),
-    path('api/storages/delete/', StorageView.as_view(http_method_names=['delete']))
+    path('api/backups/', BackupView.as_view(http_method_names=['get'])),
+    path('api/backups/<int:id>/', BackupView.as_view(http_method_names=['get'])),
+    path('api/backups/of-storage/<int:storage_id>/', BackupView.as_view(http_method_names=['get'])),
+    path('api/backups/of-owner/<int:owner_id>/', BackupView.as_view(http_method_names=['get'])),
+    path('api/backups/create/', BackupView.as_view(http_method_names=['post'])),
+    path('api/backups/delete/', BackupView.as_view(http_method_names=['delete']))
 ]
 
 urlpatterns += staticfiles_urlpatterns()

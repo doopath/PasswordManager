@@ -14,6 +14,7 @@ class Storage(models.Model):
 
 
 class Backup(models.Model):
-    data = models.DateTimeField()
+    date = models.DateTimeField(auto_now_add=True)
     owner = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     storage = models.ForeignKey(Storage, on_delete=models.DO_NOTHING)
+    content = models.CharField(default='', blank=True)
