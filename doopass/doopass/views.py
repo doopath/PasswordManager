@@ -30,7 +30,6 @@ class StorageViewSet(viewsets.ModelViewSet):
     serializer_class = StorageSerializer
     permission_classes = (IsOwnerPermission,)
 
-    @override
     def list(self, request: Request, *args, **kwargs) -> Response:
         if "owner_id" in request.query_params:
             serializer = StorageSerializer(
@@ -47,7 +46,6 @@ class BackupViewSet(viewsets.ModelViewSet):
     serializer_class = BackupSerializer
     permission_classes = (IsOwnerPermission,)
 
-    @override
     def list(self, request: Request, *args, **kwargs) -> Response:
         if "storage_id" in request.query_params:
             serializer = StorageSerializer(

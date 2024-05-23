@@ -96,7 +96,7 @@ Pass current password in body of the request you're sending.
 *Request parameters (JSON):*
 - `current_password: str | current password`
 
-If passed in the request password and token is valid then the server will return nothing.
+If passed in the request password and token is valid then the server will return nothing and delete the user.
 
 
 #
@@ -139,13 +139,13 @@ If user with passed in the request username exists and token is valid then the s
 
 #
 #### **Get storage by id**
-Get storage data by id. Only `GET` method is allowed. Auth token `is` required.
+Get storage data by id. Only `GET` method is allowed. Auth token is `not` required.
 
 *URL* - `/api/storages/<id>/`
 
 Pass id associated with the storage you need in url of the request you're sending.
 
-If storage with passed id exists and token is valid then the server will return response with storage data. Response specifications are described below.
+If storage with passed id exists then the server will return response with storage data. Response specifications are described below.
 
 *Response:*
 - `id: BigInt | primary key, associated with saved storage in the database`
@@ -156,16 +156,16 @@ If storage with passed id exists and token is valid then the server will return 
 
 #
 #### **Get storage by owner id**
-Get storage data by owner id. Only `GET` method is allowed. Auth token `is` required.
+Get storage data by owner id. Only `GET` method is allowed. Auth token is `not` required.
 
 *URL* - `/api/storages/?owner_id=<id>`
 
-Pass id associated with the storage you need in url of the request you're sending.
+Pass id associated with a user owns the storage you need in url of the request you're sending.
 
 *Request parameters (Query Params):*
 - `owner_id: int |`
 
-If user with passed id exists and token is valid then the server will return response with storage data. Response specifications are described below.
+If user with passed id exists then the server will return response with storage data. Response specifications are described below.
 
 *Response:*
 - `id: BigInt | primary key, associated with saved storage in the database`
@@ -176,11 +176,9 @@ If user with passed id exists and token is valid then the server will return res
 
 #
 #### **Get storage list**
-Get storage list. Only `GET` method is allowed. Auth token `is` required.
+Get storage list. Only `GET` method is allowed. Auth token is `not` required.
 
 *URL* - `/api/storages/`
-
-If token is valid then the server will return response with storages list. Response specifications are described below.
 
 *Response:*
 
@@ -193,7 +191,7 @@ Returns list of users. Every item has fields:
 
 #
 #### **Add new storage**
-Adds new storage to the database. Only `POST` method is allowed. Auth token is required.
+Adds new storage to the database. Only `POST` method is allowed. Auth token `is` required.
 
 *URL* - `/api/auth/storages/`
 
@@ -237,4 +235,119 @@ Delete storage. Only `DELETE` method is allowed. Auth token `is` required.
 
 *URL* - `/api/auth/storages/<id>/`
 
-If storage with id passed in the url exists and token is valid then the server will return nothing.
+If storage with id passed in the url exists and token is valid then the server will return nothing and delete the storage.
+
+
+#
+### Backup
+
+#
+#### **Get backups list**
+Get list of existing backups. Only `GET` method is allowed. Auth token is `not` required.
+
+*URL* - `/api/backups/`
+
+*Response:*
+
+Returns list of backups. Every item has fields:
+- `id: BigInt | primary key, associated with saved user in the database`
+- `name: str | name of the backup`
+- `date: str | date when the backup was created`
+- `owner: str | id of the storage owner`
+- `storage: str | id of the backedup storage`
+- `content: str | encrypted content ofo the backedup storage`
+
+
+#
+#### **Get backup by id**
+Get backup by id. Only `GET` method is allowed. Auth token is `not` required.
+
+*URL* - `/api/backups/<id>/`
+
+Pass id associated with the backup you need in url of the request you're sending.
+
+If storage with passed id exists then the server will return response with backup data. Response specifications are described below.
+
+*Response:*
+- `id: BigInt | primary key, associated with saved user in the database`
+- `name: str | name of the backup`
+- `date: str | date when the backup was created`
+- `owner: str | id of the storage owner`
+- `storage: str | id of the backedup storage`
+- `content: str | encrypted content ofo the backedup storage`
+
+
+#
+#### **Get backup by owner id**
+Get backup by owner id. Only `GET` method is allowed. Auth token is `not` required.
+
+*URL* - `/api/backups/?owner_id=<id>`
+
+Pass id associated with a user owns the backup you need in url of the request you're sending.
+
+*Request parameters (Query Params):*
+- `owner_id: int |`
+
+If backup with passed id exists then the server will return response with storage data. Response specifications are described below.
+
+*Response:*
+- `id: BigInt | primary key, associated with saved user in the database`
+- `name: str | name of the backup`
+- `date: str | date when the backup was created`
+- `owner: str | id of the storage owner`
+- `storage: str | id of the backedup storage`
+- `content: str | encrypted content ofo the backedup storage`
+
+
+#
+#### **Get backup by storage id**
+Get backup by storage id. Only `GET` method is allowed. Auth token is `not` required.
+
+*URL* - `/api/backups/?storage_id=<id>`
+
+Pass id associated with a storage backup you need based in url of the request you're sending.
+
+*Request parameters (Query Params):*
+- `storage_id: int |`
+
+If storage with passed id exists then the server will return response with storage data. Response specifications are described below.
+
+*Response:*
+- `id: BigInt | primary key, associated with saved user in the database`
+- `name: str | name of the backup`
+- `date: str | date when the backup was created`
+- `owner: str | id of the storage owner`
+- `storage: str | id of the backedup storage`
+- `content: str | encrypted content ofo the backedup storage`
+
+
+#
+#### **Add new backup**
+Adds new backup to the database. Only `POST` method is allowed. Auth token is required.
+
+*URL* - `/api/auth/backups/`
+
+*Request parameters (JSON):*
+- `storage_id: int |`
+
+If storage with id passed in the request exists and token is valid then the server will add a backup and return response with backup data. Response specifications are described below.
+
+*Response:*
+- `id: BigInt | primary key, associated with saved user in the database`
+- `name: str | name of the backup`
+- `date: str | date when the backup was created`
+- `owner: str | id of the storage owner`
+- `storage: str | id of the backedup storage`
+- `content: str | encrypted content ofo the backedup storage`
+
+
+#
+#### **Delete backup**
+Delete backup. Only `DELETE` method is allowed. Auth token `is` required.
+
+*URL* - `/api/auth/backups/<id>/`
+
+If backup with id passed in the url exists and token is valid then the server will return nothing and delete the backup.
+
+
+#
