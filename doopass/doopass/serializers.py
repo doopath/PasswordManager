@@ -17,7 +17,7 @@ class SpecialUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ["id", "username", "password", "email"]
 
-    def update(self, instance: User, validated_data: any) -> User:
+    def update(self, instance: User, validated_data: dict) -> User:
         instance.set_password(validated_data["password"])
         instance.username = validated_data["username"]
         instance.email = validated_data["email"]
@@ -32,7 +32,7 @@ class StorageSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     @override
-    def create(self, validated_data: any) -> Storage:
+    def create(self, validated_data: dict) -> Storage:
         storage = Storage.objects.create(
             **{
                 "name": validated_data["name"],
@@ -51,7 +51,7 @@ class BackupSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     @override
-    def create(self, validated_data: any) -> Backup:
+    def create(self, validated_data: dict) -> Backup:
         storage = Storage.objects.get(pk=self.context["request"].data["storage_id"])
         backup = Backup.objects.create(
             **{
@@ -66,5 +66,5 @@ class BackupSerializer(serializers.ModelSerializer):
         return backup
 
     @override
-    def update(self, instance: Backup, validated_data: any) -> Backup:
+    def update(self, instance: Backup, validated_data: dict) -> Backup:
         raise MethodNotAllowed("PUT")
