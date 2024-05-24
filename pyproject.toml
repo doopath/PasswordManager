@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "doopass.libs"
+version = "1.0.0"
+authors = [
+  { name="Michael Nikishov", email="doopath@gmail.com" },
+]
+description = "Libraries for doopass.tui project"
+readme = "README.md"
+requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/doopath/PasswordManager"
+Issues = "https://github.com/doopath/PasswordManager/issues"
