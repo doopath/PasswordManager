@@ -4,7 +4,7 @@ build-backend = 'setuptools.build_meta'
 
 [project]
 name = 'doopass'
-version = '2.3'
+version = '2.5'
 authors = [
   { name='Michael Nikishov', email='doopath@gmail.com' },
 ]
@@ -53,11 +53,12 @@ dependencies = [
     'urllib3==1.26.14',
     'webencodings==0.5.1',
     'zipp==3.13.0',
+    'doopass-libs==1.0.7'
 ]
 
 [tool.setuptools.packages.find]
 where = ['.']
-include = ['doopass', 'doopass.src', 'assets']
+include = ['doopass', 'assets']
 
 [tool.setuptools.package-data]
 '*' = ['*.css', '*.png']

@@ -1,11 +1,10 @@
 import logging
 import os
 
+from doopass_libs.core import constants
+from doopass_libs.core.store import Store
 from textual import app
 from textual.screen import Screen
-
-from . import constants
-from .store import Store
 
 
 class App(app.App):
@@ -32,6 +31,6 @@ class App(app.App):
             logging.debug("The app directory has been created")
 
     def apply_screen(
-        self, screen: Screen, pop: bool = True, name: str | None = None
+            self, screen: Screen, pop: bool = True, name: str | None = None
     ) -> None:
         ...

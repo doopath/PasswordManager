@@ -1,12 +1,14 @@
 """ A python module that helps you to manage your secret data. """
 import logging
 import sys
-
 from typing import override
 
-from doopass.src.core.app import App
-from doopass.src.core.screens.main_screen import MainScreen
-from doopass.src.core.screens.screen import Screen
+from doopass_libs.core.screens.main_screen import MainScreen
+from rich.console import RenderableType
+from textual.app import ReturnType
+from textual.screen import Screen as textaulScreen
+
+from doopass.app import App
 
 
 class Doopass(App):
@@ -19,7 +21,7 @@ class Doopass(App):
 
     @override
     def apply_screen(
-        self, screen: Screen, pop: bool = True, name: str | None = None
+            self, screen: textaulScreen, pop: bool = True, name: str | None = None
     ) -> None:
         screen.styles.background = "black"
 
@@ -33,9 +35,10 @@ class Doopass(App):
 
         self.app.push_screen(screen)
 
-    def exit(self, result=None, message=None) -> None:
+    def exit(self, result: ReturnType | None = None, return_code: int = 0, message: RenderableType | None = None,
+             **kwargs) -> None:
         logging.debug("App exited\n")
-        super().exit(result, message)
+        super().exit(result, return_code, message)
 
 
 def main() -> int:

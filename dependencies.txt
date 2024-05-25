@@ -33,3 +33,4 @@ twine
 urllib3
 webencodings
 zipp
+doopass-libs
