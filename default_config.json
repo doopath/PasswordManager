@@ -1,6 +1,6 @@
 {
     "local": {
-        "version": "2.3",
+        "version": "2.9",
         "backup_extension": ".enc.bak",
         "store_file": "APPDATA/store.enc",
         "log_file": "APPDATA/doopass.log",

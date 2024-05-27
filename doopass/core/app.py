@@ -1,10 +1,9 @@
 import logging
 import os
 
-from doopass_libs.core import constants
-from doopass_libs.core.store import Store
 from textual import app
-from textual.screen import Screen
+from .settings import config
+from .store import Store
 
 
 class App(app.App):
@@ -18,19 +17,14 @@ class App(app.App):
 
     def _setup_logging(self) -> None:
         logging.basicConfig(
-            filename=constants.LOG_FILE,
-            level=logging.DEBUG,
+            filename=config.settings['local']['log_file'],
+            level=logging.INFO,
             filemode="a",
             format="%(asctime)s %(levelname)s %(message)s",
         )
 
     def _init_appdir(self) -> None:
-        if not os.path.exists(constants.APP_DIR):
+        if not os.path.exists(config.app_dir):
             logging.debug("Creating the app directory")
-            os.mkdir(constants.APP_DIR)
+            os.mkdir(config.app_dir)
             logging.debug("The app directory has been created")
-
-    def apply_screen(
-            self, screen: Screen, pop: bool = True, name: str | None = None
-    ) -> None:
-        ...

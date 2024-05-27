@@ -2,13 +2,14 @@
 import logging
 import sys
 from typing import override
+from uuid import uuid4
 
-from doopass_libs.core.screens.main_screen import MainScreen
 from rich.console import RenderableType
-from textual.app import ReturnType
-from textual.screen import Screen as textaulScreen
+from textual.app import ReturnType, ScreenError
+from textual.screen import Screen as textaulScreen, Screen
 
-from doopass.app import App
+from doopass.core.app import App
+from doopass.core.screens.main_screen import MainScreen
 
 
 class Doopass(App):
@@ -19,7 +20,6 @@ class Doopass(App):
         self.screen.styles.background = "black"
         logging.debug("The app has been launched")
 
-    @override
     def apply_screen(
             self, screen: textaulScreen, pop: bool = True, name: str | None = None
     ) -> None:
@@ -28,12 +28,19 @@ class Doopass(App):
         if name:
             self.app.install_screen(screen, name=name)
         else:
-            self.app.install_screen(screen)
+            self.app.install_screen(screen, name=uuid4().hex)
 
         if pop:
             self.app.pop_screen()
 
         self.app.push_screen(screen)
+
+    @override
+    def install_screen(self, screen: Screen, name: str) -> None:
+        try:
+            super().install_screen(screen, name)
+        except ScreenError:
+            pass
 
     def exit(self, result: ReturnType | None = None, return_code: int = 0, message: RenderableType | None = None,
              **kwargs) -> None:

@@ -1,70 +1,73 @@
-[build-system]
-requires = ['setuptools', 'setuptools-scm']
-build-backend = 'setuptools.build_meta'
-
-[project]
-name = 'doopass'
-version = '2.5'
-authors = [
-  { name='Michael Nikishov', email='doopath@gmail.com' },
-]
+[tool.poetry]
+name = "doopass"
+version = "2.9"
 description = 'Crossplatform TUI password manager written in python'
-readme = 'README.md'
-requires-python = '>=3.11'
-classifiers = [
-    'Programming Language :: Python :: 3',
-    'License :: OSI Approved :: GNU General Public License (GPL)',
-    'Operating System :: OS Independent',
+authors = ["Michael Nikishov <doopath@gmail.com>"]
+readme = "README.md"
+homepage = "https://github.com/doopath/PasswordManager"
+packages = [
+    {include = "doopass"},
+    {include = "core", from = "doopass", to = "target_package"},
+    {include = "components", from = "doopass/core", to = "target_package"},
+    {include = "screens", from = "doopass/core", to = "target_package"},
+    {include = "assets/styles.css"}
 ]
 
-dependencies = [
-    'bleach==6.0.0',
-    'build==0.10.0',
-    'certifi==2022.12.7',
-    'cffi==1.15.1',
-    'charset-normalizer==3.0.1',
-    'click==8.1.3',
-    'colorama==0.4.6',
-    'cryptography==39.0.1',
-    'docutils==0.19',
-    'idna==3.4',
-    'importlib-metadata==4.13.0',
-    'jaraco.classes==3.2.3',
-    'keyring==23.13.1',
-    'markdown-it-py==2.1.0',
-    'mdurl==0.1.2',
-    'more-itertools==9.0.0',
-    'nanoid==2.0.0',
-    'packaging==23.0',
-    'pkginfo==1.9.6',
-    'pycparser==2.21',
-    'Pygments==2.14.0',
-    'pyperclip==1.8.2',
-    'pyproject_hooks==1.0.0',
-    'pywin32-ctypes==0.2.0',
-    'readme-renderer==37.3',
-    'requests==2.28.2',
-    'requests-toolbelt==0.10.1',
-    'rfc3986==2.0.0',
-    'rich==13.3.1',
-    'six==1.16.0',
-    'textual==0.10.1',
-    'twine==4.0.2',
-    'urllib3==1.26.14',
-    'webencodings==0.5.1',
-    'zipp==3.13.0',
-    'doopass-libs==1.0.7'
-]
-
-[tool.setuptools.packages.find]
-where = ['.']
-include = ['doopass', 'assets']
-
-[tool.setuptools.package-data]
-'*' = ['*.css', '*.png']
-
-[project.scripts]
+[tool.poetry.scripts]
 doopass = 'doopass.doopass:main'
 
-[project.urls]
-'Homepage' = 'https://github.com/doopath/PasswordManager'
+[tool.poetry.dependencies]
+python = "^3.12.0"
+build = "1.2.1"
+CacheControl = "0.14.0"
+certifi = "2024.2.2"
+cffi = "1.16.0"
+charset-normalizer = "3.3.2"
+cleo = "2.1.0"
+crashtest = "0.4.1"
+cryptography = "42.0.7"
+distlib = "0.3.8"
+dulwich = "0.21.7"
+fastjsonschema = "2.19.1"
+filelock = "3.14.0"
+idna = "3.7"
+installer = "0.7.0"
+jaraco_classes = "3.4.0"
+jeepney = "0.8.0"
+keyring = "24.3.1"
+linkify-it-py = "2.0.3"
+markdown-it-py = "3.0.0"
+mdit-py-plugins = "0.4.1"
+mdurl = "0.1.2"
+more-itertools = "10.2.0"
+msgpack = "1.0.8"
+packaging = "24.0"
+pexpect = "4.9.0"
+pkginfo = "1.10.0"
+platformdirs = "4.2.2"
+poetry = "1.8.3"
+poetry-core = "1.9.0"
+poetry-plugin-export = "1.8.0"
+ptyprocess = "0.7.0"
+pycparser = "2.22"
+Pygments = "2.18.0"
+pyperclip = "1.8.2"
+pyproject_hooks = "1.1.0"
+rapidfuzz = "3.9.1"
+requests = "2.32.2"
+requests-toolbelt = "1.0.0"
+rich = "13.7.1"
+SecretStorage = "3.3.3"
+shellingham = "1.5.4"
+textual = "0.63.4"
+tomlkit = "0.12.5"
+trove-classifiers = "2024.5.22"
+typing_extensions = "4.12.0"
+twine = "5.1.0"
+uc-micro-py = "1.0.3"
+urllib3 = "2.2.1"
+virtualenv = "20.26.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

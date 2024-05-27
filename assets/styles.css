@@ -11,6 +11,7 @@
     background: #e9ecef;
     color: #1b1b1b;
     border: none;
+    height: 5;
 }
 
 .button:focus {
@@ -139,8 +140,8 @@
 
 .select_menu_buttons_supercontainer {
     width: 100%;
-    height: 16;
-    grid-size: 3 1;
+    height: 20;
+    grid-size: 4 1;
     grid-columns: 1fr 3fr 1fr;
     align: center middle;
 }
@@ -184,6 +185,7 @@
 .store_handle_search_clean_button {
     width: 100%;
     margin: 0 1 0 0;
+    height: 5;
 }
 
 .store_handle_item {
@@ -210,7 +212,7 @@
 
 .store_handle_item_buttons_container {
     align: right middle;
-    height: 3;
+    height: 5;
     grid-size: 3 1;
     grid-columns: 1fr 1fr 1fr;
     margin: 0 1 0 1;
@@ -222,6 +224,7 @@
     width: 100%;
     min-width: 10;
     align: right middle;
+    height: 5;
 }
 
 .store_handle_buttons_container {
@@ -278,7 +281,7 @@
 .backup_manage_screen_container {
     width: 100%;
     height: 100%;
-    margin: 3;
+    margin: 1 3 0 3;
     align: center top;
     content-align: center middle;
 }
@@ -409,4 +412,58 @@
     width: 100%;
     height: 1;
     margin: 1 0 1 0;
+}
+
+
+.settings_handle_page_container {
+    width: 100%;
+    height: 100%;
+    margin: 1 4;
+}
+
+.settings_handle_page_buttons_container {
+    width: 100%;
+    height: 3;
+    grid-size: 3 1;
+    grid-columns: 1fr 1fr 1fr;
+}
+
+.settings_manage_screen_button {
+    width: 100%;
+    margin: 0 1 0 0;
+}
+
+.settings_manage_page_pairs_container {
+    width: 100%;
+    height: auto;
+    margin: 0 0 5 0;
+}
+
+.settings_manage_page_pairs_label {
+    width: 100%;
+    text-style: bold;
+    text-align: center;
+    margin: 4 0 2 0;
+}
+
+.settings_manage_page_pair_label_first,
+.settings_manage_page_pair_label_second {
+    text-align: justify;
+    height: auto;
+    margin: 1 0 0 0;
+    width: 100%;
+}
+
+.settings_manage_page_pair_container {
+    width: 100%;
+    height: 3;
+    grid-size: 3 1;
+    grid-columns: 1fr 1fr 1fr;
+    grid-rows: 1fr;
+    margin: 0 0 1 0;
+}
+
+.settings_manage_page_pair_button {
+    width: 100%;
+    margin: 0 5 0 10;
 }
